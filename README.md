@@ -1,0 +1,1 @@
+# Better practice MVC example
