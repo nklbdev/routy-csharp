@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cb59218b-f998-4035-af8e-116fa86eb776" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SuperHeroes/obj/Debug/SuperHeroes.csprojResolveAssemblyReference.cache" afterPath="$PROJECT_DIR$/SuperHeroes/obj/Debug/SuperHeroes.csprojResolveAssemblyReference.cache" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/.idea.SuperHeroes/.idea/contentModel.xml" afterPath="$PROJECT_DIR$/.idea/.idea.SuperHeroes/.idea/contentModel.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/.idea.SuperHeroes/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/.idea.SuperHeroes/.idea/workspace.xml" />
@@ -118,12 +119,12 @@
       <workItem from="1510409397133" duration="544000" />
       <workItem from="1510409976662" duration="84000" />
       <workItem from="1510410114545" duration="545000" />
-      <workItem from="1510411238192" duration="104000" />
+      <workItem from="1510411238192" duration="111000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1277000" />
+    <option name="totallyTimeSpent" value="1284000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
