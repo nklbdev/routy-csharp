@@ -54,7 +54,6 @@
     <Compile Include="ParameterCollector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryDescriber.cs" />
-    <Compile Include="Resource.cs" />
     <Compile Include="ResourceCollector.cs" />
     <Compile Include="Responder.cs" />
     <Compile Include="Server.cs" />
