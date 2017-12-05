@@ -12,18 +12,22 @@ new Server(ResourceCollector.Root((HttpListenerRequest r) => ioc.Resolve<HomeCon
                 get: h => h.Handle(q => q, c => c.WithDefault().By(a => a.About)))
             .Named("news", r => ioc.Resolve<NewsController>(r),
                 get: h => h
+                    // You can use synchronous methods of default controller
                     .Handle(q => q
                             .Single<int?>("page", s => int.Parse(s), null)
                             .Single<bool?>("order", s => bool.Parse(s), null),
                         c => c.WithDefault().By(a => a.Index))
+                    // Or asynchronous
                     .Handle(q => q
                             .Single("page", int.Parse, 0)
                             .Single("order", bool.Parse, false),
                         c => c.WithDefault().ByAsync(a => a.IndexAsync))
+                    // Or asynchronous with CancellationToken
                     .Handle(q => q
                             .Single("page", int.Parse, 0)
                             .Single("order", bool.Parse, false),
                         c => c.WithDefault().ByAsyncCanc(a => a.IndexAsync))
+                    // Or you can use another controller
                     .Handle(q => q
                             .Single("page", int.Parse, 0),
                         c => c.With(ioc.Resolve<ArticleController>).By(a => a.Index))
@@ -35,7 +39,9 @@ new Server(ResourceCollector.Root((HttpListenerRequest r) => ioc.Resolve<HomeCon
                         c => c.With(ioc.Resolve<ArticleController>).ByAsyncCanc(a => a.IndexAsync)),
                 post: h => h.Handle(q => q.Single("title", s => s).Single("content", s => s),
                     c => c.WithDefault().By(a => a.Add)),
+                // You can make deep resource tree
                 nested: news => news
+                    // With values from Url string
                     .Valued(int.Parse,
                         get: h => h
                             .Handle(q => q, c => c.WithDefault().By(a => a.Get)),
