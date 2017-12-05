@@ -49,8 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ControllerFactorySelector.cs" />
-    <Compile Include="FunctionSelectors\MethodSelector.cs" />
     <Compile Include="HttpQueryType.cs" />
+    <Compile Include="MethodSelector.cs" />
     <Compile Include="ParameterCollector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryDescriber.cs" />

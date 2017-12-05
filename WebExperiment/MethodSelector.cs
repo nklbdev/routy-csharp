@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WebExperiment.FunctionSelectors
+namespace WebExperiment
 {
     public class MethodSelector<TRequest, TResponse, TController>
     {
