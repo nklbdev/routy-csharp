@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -18,32 +18,80 @@ namespace WebExperimemtTests
             _cts = new CancellationTokenSource();
         }
         
-        [Test]
-        public void WithoutParameters()
+        private class Ctrlr
         {
-            const string content = "asdfsadf";
-            Func<Response> del = () => new Response{Content = content};
+            private readonly Responder _responder;
+            private readonly int _request;
+            public Ctrlr(int request, Responder resp)
+            {
+                _responder = resp;
+                _request = request;
+            }
             
-            var a = new Hndlr(del);
-
-            var result = a.Handle(new object[] { }, new Dictionary<string, string>(), _cts.Token).Result;
+            public Responder Method(int a)
+            {
+                Assert.AreEqual(543, _request);
+                Assert.AreEqual(192, a);
+                return _responder;
+            }
+        }
+        
+        private class Ctrlr2
+        {
+            private readonly Responder _responder;
+            private readonly int _request;
+            public Ctrlr2(int request, Responder resp)
+            {
+                _responder = resp;
+                _request = request;
+            }
             
-            Assert.NotNull(result);
-            Assert.AreEqual(content, result.Content);
+            public Responder Method(string b, bool c)
+            {
+                Assert.AreEqual(543, _request);
+                Assert.AreEqual("asdfasdfasdf", b);
+                Assert.AreEqual(true, c);
+                return _responder;
+            }
         }
         
         [Test]
-        public void Some()
+        public void TestWithAlternative()
         {
-            const string content = "asdfsadf";
-            Func<int, int, Response> del = (a, b) => new Response{Content = (a + b).ToString()};
-            
-            var hndlr = new Hndlr(del);
+            Task ExpectedResponder(HttpListenerResponse response) => Task.FromResult(false);
 
-            var result = hndlr.Handle(new object[] { }, new Dictionary<string, string>{["a"] = "3", ["b"] = "4"}, _cts.Token).Result;
-            
-            Assert.NotNull(result);
-            Assert.AreEqual("7", result.Content);
+            var handler = ResourceCollector
+                .Root((int r) => new Ctrlr(r, ExpectedResponder),
+                    get: h => h.Handle(
+                        q => q.Single("a", int.Parse, 192),
+                        c => c.With(r => new Ctrlr(r, ExpectedResponder)).By(a => a.Method)));
+
+//            var uri = new Uri("http://localhost?a=192");
+            var uri = new Uri("http://localhost");
+            var responder = handler(543, uri, _cts.Token).Result;
+            responder(null).Wait();
+            Assert.AreEqual((Responder) ExpectedResponder, responder);
+        }
+        
+        [Test]
+        public void TestWithDefault()
+        {
+            Task ExpectedResponder(HttpListenerResponse response) => Task.FromResult(false);
+
+            var handler = ResourceCollector
+                .Root((int r) => new Ctrlr(r, ExpectedResponder),
+                    get: h => h
+                        .Handle(q => q.Single("a", int.Parse, 0), c => c.WithDefault().By(a => a.Method))
+                        .Handle(q => q
+                            .Single("b", s => s)
+                            .Single("c", bool.Parse),
+                            c => c.With(r => new Ctrlr2(r, ExpectedResponder)).By(a => a.Method))
+                    );
+
+            var uri = new Uri("http://localhost?b=asdfasdfasdf&c=true");
+            var responder = handler(543, uri, _cts.Token).Result;
+            responder(null).Wait();
+            Assert.AreEqual((Responder) ExpectedResponder, responder);
         }
     }
 }

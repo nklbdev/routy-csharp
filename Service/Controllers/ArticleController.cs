@@ -7,37 +7,37 @@ namespace Service.Controllers
 {
     internal class ArticleController
     {
-        public Response Index(int? arg)
+        public Responder Index(int arg)
         {
             throw new NotImplementedException();
         }
         
-        public async Task<Response> IndexAsync(int? arg)
+        public async Task<Responder> IndexAsync(int arg)
         {
             throw new NotImplementedException();
         }
         
-        public async Task<Response> IndexAsync(int? arg, CancellationToken ct)
+        public async Task<Responder> IndexAsync(int arg, CancellationToken ct)
         {
             throw new NotImplementedException();
         }
 
-        public Response Add(string arg1, string arg2)
+        public Responder Add(string arg1, string arg2)
         {
             throw new NotImplementedException();
         }
 
-        public Response Get(int arg)
+        public Responder Get(int arg)
         {
             throw new NotImplementedException();
         }
 
-        public Response Change(int arg1, string arg2, string arg3)
+        public Responder Change(int arg1, string arg2, string arg3)
         {
             throw new NotImplementedException();
         }
 
-        public Response Delete(int arg)
+        public Responder Delete(int arg)
         {
             throw new NotImplementedException();
         }

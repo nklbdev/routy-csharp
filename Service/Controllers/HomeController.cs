@@ -5,12 +5,12 @@ namespace Service.Controllers
 {
     internal class HomeController
     {
-        public Response Index()
+        public Responder Index()
         {
             throw new NotImplementedException();
         }
 
-        public Response About()
+        public Responder About()
         {
             throw new NotImplementedException();
         }
