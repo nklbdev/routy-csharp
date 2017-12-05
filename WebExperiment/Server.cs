@@ -11,7 +11,7 @@ namespace WebExperiment
         private readonly HttpListener _httpListener;
         private readonly Resource _resource;
 
-        public Server(Func<HttpListenerRequest, Uri, CancellationToken, Task<Responder>> handler)
+        public Server(Func<HttpListenerRequest, Uri, CancellationToken, Task<Responder<HttpListenerResponse>>> handler)
         {
             _httpListener = new HttpListener();
         }

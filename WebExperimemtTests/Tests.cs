@@ -20,15 +20,15 @@ namespace WebExperimemtTests
         
         private class Ctrlr
         {
-            private readonly Responder _responder;
+            private readonly Responder<int> _responder;
             private readonly int _request;
-            public Ctrlr(int request, Responder resp)
+            public Ctrlr(int request, Responder<int> resp)
             {
                 _responder = resp;
                 _request = request;
             }
             
-            public Responder Method(int a)
+            public Responder<int> Method(int a)
             {
                 Assert.AreEqual(543, _request);
                 Assert.AreEqual(192, a);
@@ -38,15 +38,15 @@ namespace WebExperimemtTests
         
         private class Ctrlr2
         {
-            private readonly Responder _responder;
+            private readonly Responder<int> _responder;
             private readonly int _request;
-            public Ctrlr2(int request, Responder resp)
+            public Ctrlr2(int request, Responder<int> resp)
             {
                 _responder = resp;
                 _request = request;
             }
             
-            public Responder Method(string b, bool c)
+            public Responder<int> Method(string b, bool c)
             {
                 Assert.AreEqual(543, _request);
                 Assert.AreEqual("asdfasdfasdf", b);
@@ -58,10 +58,10 @@ namespace WebExperimemtTests
         [Test]
         public void TestWithAlternative()
         {
-            Task ExpectedResponder(HttpListenerResponse response) => Task.FromResult(false);
+            Task ExpectedResponder(int response) => Task.FromResult(false);
 
-            var handler = ResourceCollector
-                .Root((int r) => new Ctrlr(r, ExpectedResponder),
+            var handler = ResourceCollector<int, int>
+                .Root(r => new Ctrlr(r, ExpectedResponder),
                     get: h => h.Handle(
                         q => q.Single("a", int.Parse, 192),
                         c => c.With(r => new Ctrlr(r, ExpectedResponder)).By(a => a.Method)));
@@ -69,17 +69,17 @@ namespace WebExperimemtTests
 //            var uri = new Uri("http://localhost?a=192");
             var uri = new Uri("http://localhost");
             var responder = handler(543, uri, _cts.Token).Result;
-            responder(null).Wait();
-            Assert.AreEqual((Responder) ExpectedResponder, responder);
+            responder(100).Wait();
+            Assert.AreEqual((Responder<int>) ExpectedResponder, responder);
         }
         
         [Test]
         public void TestWithDefault()
         {
-            Task ExpectedResponder(HttpListenerResponse response) => Task.FromResult(false);
+            Task ExpectedResponder(int response) => Task.FromResult(false);
 
-            var handler = ResourceCollector
-                .Root((int r) => new Ctrlr(r, ExpectedResponder),
+            var handler = ResourceCollector<int, int>
+                .Root(r => new Ctrlr(r, ExpectedResponder),
                     get: h => h
                         .Handle(q => q.Single("a", int.Parse, 0), c => c.WithDefault().By(a => a.Method))
                         .Handle(q => q
@@ -90,8 +90,8 @@ namespace WebExperimemtTests
 
             var uri = new Uri("http://localhost?b=asdfasdfasdf&c=true");
             var responder = handler(543, uri, _cts.Token).Result;
-            responder(null).Wait();
-            Assert.AreEqual((Responder) ExpectedResponder, responder);
+            responder(100).Wait();
+            Assert.AreEqual((Responder<int>) ExpectedResponder, responder);
         }
     }
 }

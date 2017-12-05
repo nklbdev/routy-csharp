@@ -40,7 +40,7 @@ namespace Service
 
             var ioc = new IoC();
 
-            new Server(ResourceCollector.Root((HttpListenerRequest r) => ioc.Resolve<HomeController>(r),
+            new Server(ResourceCollector<HttpListenerRequest, HttpListenerResponse>.Root(ioc.Resolve<HomeController>,
                     get: h => h.Handle(q => q, c => c.WithDefault().By(a => a.Index)),
                     nested: root => root
                         .Named("about",
