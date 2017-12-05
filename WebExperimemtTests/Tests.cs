@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -62,8 +61,8 @@ namespace WebExperimemtTests
 
             var handler = ResourceCollector<int, int>
                 .Root(r => new Ctrlr(r, ExpectedResponder),
-                    get: h => h.Handle(
-                        q => q.Single("a", int.Parse, 192),
+                    get: h => h.Handle(q => q
+                            .Single("a", int.Parse, 192),
                         c => c.With(r => new Ctrlr(r, ExpectedResponder)).By(a => a.Method)));
 
 //            var uri = new Uri("http://localhost?a=192");
@@ -81,11 +80,11 @@ namespace WebExperimemtTests
             var handler = ResourceCollector<int, int>
                 .Root(r => new Ctrlr(r, ExpectedResponder),
                     get: h => h
-                        .Handle(q => q.Single("a", int.Parse, 0), c => c.WithDefault().By(a => a.Method))
                         .Handle(q => q
-                            .Single("b", s => s)
-                            .Single("c", bool.Parse),
+                                .Single("b", s => s)
+                                .Single("c", bool.Parse),
                             c => c.With(r => new Ctrlr2(r, ExpectedResponder)).By(a => a.Method))
+                        .Handle(q => q.Single("a", int.Parse, 0), c => c.WithDefault().By(a => a.Method))
                     );
 
             var uri = new Uri("http://localhost?b=asdfasdfasdf&c=true");
