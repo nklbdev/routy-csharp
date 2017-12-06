@@ -10,7 +10,7 @@ namespace WebExperiment
     {
         private readonly HttpListener _httpListener;
 
-        public Server(Func<HttpListenerRequest, Uri, CancellationToken, Task<Responder<HttpListenerResponse>>> handler)
+        public Server(Func<string, Uri, HttpListenerRequest, CancellationToken, Task<Responder<HttpListenerResponse>>> handler)
         {
             _httpListener = new HttpListener();
         }

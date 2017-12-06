@@ -67,7 +67,7 @@ namespace WebExperimemtTests
 
 //            var uri = new Uri("http://localhost?a=192");
             var uri = new Uri("http://localhost");
-            var responder = handler(543, uri, _cts.Token).Result;
+            var responder = handler("get", uri, 543, _cts.Token).Result;
             responder(100).Wait();
             Assert.AreEqual((Responder<int>) ExpectedResponder, responder);
         }
@@ -88,7 +88,8 @@ namespace WebExperimemtTests
                     );
 
             var uri = new Uri("http://localhost?b=asdfasdfasdf&c=true");
-            var responder = handler(543, uri, _cts.Token).Result;
+//            var responder = handler(543, uri, _cts.Token).Result;
+            var responder = handler("get", uri, 543, _cts.Token).Result;
             responder(100).Wait();
             Assert.AreEqual((Responder<int>) ExpectedResponder, responder);
         }

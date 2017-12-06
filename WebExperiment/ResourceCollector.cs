@@ -7,7 +7,7 @@ namespace WebExperiment
 {
     public static class ResourceCollector<TRequest, TResponse>
     {
-        public static Func<TRequest, Uri, CancellationToken, Task<Responder<TResponse>>> Root<TDefaultController>(Func<TRequest, TDefaultController> defaultControllerFactory,
+        public static Func<string, Uri, TRequest, CancellationToken, Task<Responder<TResponse>>> Root<TDefaultController>(Func<TRequest, TDefaultController> defaultControllerFactory,
             Func<QueryDescriber<TRequest, TResponse, TDefaultController>, QueryDescriber<TRequest, TResponse, TDefaultController>> options = null,
             Func<QueryDescriber<TRequest, TResponse, TDefaultController>, QueryDescriber<TRequest, TResponse, TDefaultController>> get = null,
             Func<QueryDescriber<TRequest, TResponse, TDefaultController>, QueryDescriber<TRequest, TResponse, TDefaultController>> head = null,
@@ -21,18 +21,18 @@ namespace WebExperiment
         {
             var _asdf = new[]
             {
-//                (HttpQueryType.Options, options),
-                (HttpQueryType.Get, get)//,
-//                (HttpQueryType.Head, head),
-//                (HttpQueryType.Post, post),
-//                (HttpQueryType.Put, put),
-//                (HttpQueryType.Patch, patch),
-//                (HttpQueryType.Delete, post),
-//                (HttpQueryType.Trace, post),
-//                (HttpQueryType.Connect, post)
-            }.Select(x => (x.Item1, x.Item2(new QueryDescriber<TRequest, TResponse, TDefaultController>(defaultControllerFactory)).A())).ToDictionary(x => x.Item1, x => x.Item2);
+                ("options", options),
+                ("get", get),
+                ("head", head),
+                ("post", post),
+                ("put", put),
+                ("patch", patch),
+                ("delete", post),
+                ("trace", post),
+                ("connect", post)
+            }.Where(x => x.Item2 != null).Select(x => (x.Item1, x.Item2(new QueryDescriber<TRequest, TResponse, TDefaultController>(defaultControllerFactory)).A())).ToDictionary(x => x.Item1, x => x.Item2);
 
-            return (request, uri, ct) => _asdf[HttpQueryType.Get](request, uri, ct);
+            return (method, uri, request, ct) => _asdf[method.ToLower()](request, uri, ct);
         }
     }
     
