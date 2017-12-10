@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading;
@@ -48,6 +50,11 @@ namespace Service
         }
         
         public static System.Action<HttpListenerResponse> Index(int a)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public static System.Action<HttpListenerResponse> Index(IEnumerable<int> a)
         {
             throw new NotImplementedException();
         }
@@ -106,6 +113,8 @@ namespace Service
                                 .Query(q => q.Single("a", int.Parse), cf => Index)
                                 // Or not required with default value
                                 .Query(q => q.Single("a", int.Parse, 0), cf => Index)
+                                // Or array-parameters
+                                .Query(q => q.Array("a", int.Parse), cf => Index)
                                 // You can extract any data from context by your own extractor
                                 // and declare it as parameter for your method
                                 .Query(q => q.Context(ct => ParseEntity(ct.InputStream), 4), cf => Index)
