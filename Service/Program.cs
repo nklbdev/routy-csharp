@@ -83,6 +83,7 @@ namespace Service
             var ioc = new IoC();
 
             new Server(Resource<HttpListenerRequest, System.Action<HttpListenerResponse>>
+                    // Pass default controller factory to root resource
                     .Root(ioc.Resolve<HomeController>,
                         methods => methods
                             // You can declare HTTP methods with many handlers
@@ -112,9 +113,11 @@ namespace Service
                         // Declare nested resources
                         root => root
                             // With concrete name
+                            // And with default controller factory from parent resource
                             .Named("about", methods => methods
                                 .Method("get", h => h
                                     .Query(q => q, cf => cf().About)))
+                            // Or with other controller factory
                             .Named("news", ioc.Resolve<NewsController>,
                                 methods => methods
                                     .Method("get", h => h
@@ -124,6 +127,7 @@ namespace Service
                                             cf => cf().Index)),
                                 news => news
                                     // Or use a value as a name
+                                    // (with controller factory from parent resource or new)
                                     .Valued(int.Parse,
                                         methods => methods
                                             .Method("get", h => h
