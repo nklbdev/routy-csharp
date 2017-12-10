@@ -8,37 +8,37 @@ namespace Service.Controllers
 {
     internal class ArticleController
     {
-        public Responder<HttpListenerResponse> Index(int arg)
+        public Func<HttpListenerResponse, Task> Index(int arg)
         {
             throw new NotImplementedException();
         }
         
-        public async Task<Responder<HttpListenerResponse>> IndexAsync(int arg)
+        public async Task<Func<HttpListenerResponse, Task>> IndexAsync(int arg)
         {
             throw new NotImplementedException();
         }
         
-        public async Task<Responder<HttpListenerResponse>> IndexAsync(int arg, CancellationToken ct)
+        public async Task<Func<HttpListenerResponse, Task>> IndexAsync(int arg, CancellationToken ct)
         {
             throw new NotImplementedException();
         }
 
-        public Responder<HttpListenerResponse> Add(string arg1, string arg2)
+        public Func<HttpListenerResponse, Task> Add(string arg1, string arg2)
         {
             throw new NotImplementedException();
         }
 
-        public Responder<HttpListenerResponse> Get(int arg)
+        public Func<HttpListenerResponse, Task> Get(int arg)
         {
             throw new NotImplementedException();
         }
 
-        public Responder<HttpListenerResponse> Change(int arg1, string arg2, string arg3)
+        public Func<HttpListenerResponse, Task> Change(int arg1, string arg2, string arg3)
         {
             throw new NotImplementedException();
         }
 
-        public Responder<HttpListenerResponse> Delete(int arg)
+        public Func<HttpListenerResponse, Task> Delete(int arg)
         {
             throw new NotImplementedException();
         }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,10 +11,17 @@ namespace WebExperiment
     public class Server
     {
         private readonly HttpListener _httpListener;
+        private readonly Func<string, Uri, HttpListenerRequest, CancellationToken, System.Action<HttpListenerResponse>> _handler;
 
-        public Server(Func<string, Uri, HttpListenerRequest, CancellationToken, Task<Responder<HttpListenerResponse>>> handler)
+        public Server(Func<string, Uri, HttpListenerRequest, CancellationToken, System.Action<HttpListenerResponse>> handler)
         {
             _httpListener = new HttpListener();
+            _handler = handler;
+        }
+
+        public Server(MainHandler<HttpListenerRequest, System.Action<HttpListenerResponse>> handler)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task Run()
@@ -22,26 +31,27 @@ namespace WebExperiment
         
         public async Task Run(CancellationToken ct)
         {
-            throw new NotImplementedException();
-//            var b = new BufferBlock<HttpListenerContext>(new DataflowBlockOptions { CancellationToken = ct });
-//            
-//            var a = new ActionBlock<HttpListenerContext>(async context =>
-//            {
-//                using (var response = context.Response)
-//                    await _resource.Handle(context.Request, response, ct);
-//            }, new ExecutionDataflowBlockOptions { CancellationToken = ct });
-//
-//            b.LinkTo(a);
-//            
-//            _httpListener.Prefixes.Add("http://127.0.0.1:3000/");
-//            _httpListener.Prefixes.Add("http://localhost:3000/");
-//            _httpListener.Start();
-//            while (true)
-//            {
-//                ct.ThrowIfCancellationRequested();
-//                var context = await _httpListener.GetContextAsync();
-//                b.Post(context);
-//            }
+            var b = new BufferBlock<HttpListenerContext>(new DataflowBlockOptions { CancellationToken = ct });
+            
+            var a = new ActionBlock<HttpListenerContext>(context =>
+            {
+                var request = context.Request;
+                var responder = _handler(request.HttpMethod, request.Url, request, ct);
+                using (var response = context.Response)
+                    responder(response);
+            }, new ExecutionDataflowBlockOptions { CancellationToken = ct });
+
+            b.LinkTo(a);
+            
+            _httpListener.Prefixes.Add("http://127.0.0.1:3000/");
+            _httpListener.Prefixes.Add("http://localhost:3000/");
+            _httpListener.Start();
+            while (true)
+            {
+                ct.ThrowIfCancellationRequested();
+                var context = await _httpListener.GetContextAsync();
+                b.Post(context);
+            }
         }
     }
 }

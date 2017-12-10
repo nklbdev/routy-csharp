@@ -1,9 +1,10 @@
-﻿using System;
-
-namespace Service
+﻿namespace Service
 {
     public class IoC
     {
-        public T Resolve<T>(object parameter) { throw new NotImplementedException(); }
+        public T Resolve<T>() where T : class, new()
+        {
+            return new T();
+        }
     }
 }

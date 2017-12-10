@@ -8,37 +8,42 @@ namespace Service.Controllers
 {
     internal class NewsController
     {
-        public Responder<HttpListenerResponse> Index(int? arg1, bool? arg2)
+        public System.Action<HttpListenerResponse> Index(int arg1, bool arg2)
         {
             throw new NotImplementedException();
         }
         
-        public Task<Responder<HttpListenerResponse>> IndexAsync(int arg1, bool arg2)
+        public Func<HttpListenerResponse, Task> Index2(HttpListenerRequest r, int arg1, bool arg2)
         {
             throw new NotImplementedException();
         }
         
-        public Task<Responder<HttpListenerResponse>> IndexAsync(int arg1, bool arg2, CancellationToken ct)
+        public Task<Func<HttpListenerResponse, Task>> IndexAsync(int arg1, bool arg2)
         {
             throw new NotImplementedException();
         }
         
-        public Responder<HttpListenerResponse> Add(string arg1, string arg2)
+        public Task<Func<HttpListenerResponse, Task>> IndexAsync(int arg1, bool arg2, CancellationToken ct)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public System.Action<HttpListenerResponse> Add(Entity entity)
         {
             throw new NotImplementedException();
         }
 
-        public Responder<HttpListenerResponse> Get(int arg)
+        public System.Action<HttpListenerResponse> Get(int arg)
         {
             throw new NotImplementedException();
         }
 
-        public Responder<HttpListenerResponse> Change(int arg1, string arg2, string arg3)
+        public Func<HttpListenerResponse, Task> Change(int arg1, string arg2, string arg3)
         {
             throw new NotImplementedException();
         }
 
-        public Responder<HttpListenerResponse> Delete(int arg)
+        public Func<HttpListenerResponse, Task> Delete(int arg)
         {
             throw new NotImplementedException();
         }
