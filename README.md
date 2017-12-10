@@ -3,80 +3,57 @@
 You can build your routing in this way:
 
 ```cs
-var ioc = new IoC();
+public static void Main(string[] args)
+{
+    var cts = new CancellationTokenSource();
+    var ioc = new IoC();
 
-new Server(ResourceCollector<HttpListenerRequest, HttpListenerResponse>.Root(ioc.Resolve<HomeController>,
-        get: h => h.Handle(q => q, c => c.WithDefault().By(a => a.Index)),
-        nested: root => root
-            .Named("about",
-                get: h => h.Handle(q => q, c => c.WithDefault().By(a => a.About)))
-            .Named("news", r => ioc.Resolve<NewsController>(r),
-                get: h => h
-                    // You can use synchronous methods of default controller
-                    .Handle(q => q
-                            .Single<int?>("page", s => int.Parse(s), null)
-                            .Single<bool?>("order", s => bool.Parse(s), null),
-                        c => c.WithDefault().By(a => a.Index))
-                    // Or asynchronous
-                    .Handle(q => q
-                            .Single("page", int.Parse, 0)
-                            .Single("order", bool.Parse, false),
-                        c => c.WithDefault().ByAsync(a => a.IndexAsync))
-                    // Or asynchronous with CancellationToken
-                    .Handle(q => q
-                            .Single("page", int.Parse, 0)
-                            .Single("order", bool.Parse, false),
-                        c => c.WithDefault().ByAsyncCanc(a => a.IndexAsync))
-                    // Or you can use another controller
-                    .Handle(q => q
-                            .Single("page", int.Parse, 0),
-                        c => c.With(ioc.Resolve<ArticleController>).By(a => a.Index))
-                    .Handle(q => q
-                            .Single("page", int.Parse, 0),
-                        c => c.With(ioc.Resolve<ArticleController>).ByAsync(a => a.IndexAsync))
-                    .Handle(q => q
-                            .Single("page", int.Parse, 0),
-                        c => c.With(ioc.Resolve<ArticleController>).ByAsyncCanc(a => a.IndexAsync)),
-                post: h => h.Handle(q => q.Single("title", s => s).Single("content", s => s),
-                    c => c.WithDefault().By(a => a.Add)),
-                // You can make deep resource tree
-                nested: news => news
-                    // With values from Url string
-                    .Valued(int.Parse,
-                        get: h => h
-                            .Handle(q => q, c => c.WithDefault().By(a => a.Get)),
-                        put: h => h.Handle(q => q
-                                .Single("title", s => s)
-                                .Single("content", s => s),
-                            c => c.WithDefault().By(a => a.Change)),
-                        delete: h => h.Handle(q => q, c => c.WithDefault().By(a => a.Delete)),
-                        nested: cNews => cNews
-                            .Named("comments", r => ioc.Resolve<CommentController>(r),
-                                get: h => h.Handle(q => q
-                                        .Single<int?>("page", s => int.Parse(s), 0),
-                                    c => c.WithDefault().By(a => a.Index)),
-                                post: h => h.Handle(q => q
-                                        .Single("title", s => s).Single("content", s => s),
-                                    c => c.WithDefault().By(a => a.Add)),
-                                nested: comment => comment
-                                    .Valued(int.Parse,
-                                        get: h => h.Handle(q => q, c => c.WithDefault().By(a => a.Get)),
-                                        put: h => h.Handle(q => q
-                                                .Single("content", s => s),
-                                            c => c.WithDefault().By(a => a.Change)),
-                                        delete: h =>
-                                            h.Handle(q => q, c => c.WithDefault().By(a => a.Delete))))))
-            .Named("articles", ioc.Resolve<ArticleController>,
-                get: h => h.Handle(q => q.Single("page", int.Parse, 0),
-                    c => c.WithDefault().By(a => a.Index)),
-                post: h => h.Handle(q => q.Single("title", s => s).Single("content", s => s),
-                    c => c.WithDefault().By(a => a.Add)),
-                nested: article => article
-                    .Valued(int.Parse,
-                        get: h => h.Handle(q => q, c => c.WithDefault().By(a => a.Get)),
-                        put: h => h.Handle(q => q.Single("title", s => s).Single("content", s => s),
-                            c => c.WithDefault().By(a => a.Change)),
-                        delete: h => h.Handle(q => q, c => c.WithDefault().By(a => a.Delete))))
-    )
-).Run(_cts.Token).Wait();
+    new Server(Resource<HttpListenerRequest, System.Action<HttpListenerResponse>>
+            .Root(ioc.Resolve<HomeController>,
+                methods => methods
+                    // You can declare HTTP methods with many handlers
+                    // (Declare simple handlers first)
+                    .Method("get", h => h
+                        // You can bind controller method
+                        .Query(q => q, cf => cf().Index)
+                        // or other controller method
+                        .Query(q => q, cf => ioc.Resolve<HomeController>().Index)
+                        // or async controller method
+                        .Query(q => q, cf => cf().IndexAsync)
+                        // or pass cancellation token to async method
+                        .Query(q => q.CancellationToken(), cf => cf().IndexAsync)
+                        // You also can bind another static method
+                        .Query(q => q, cf => Index)
+                        // or static asyncs
+                        .Query(q => q, cf => IndexAsync)
+                        .Query(q => q.CancellationToken(), cf => IndexAsync)
+                        // You can declare required query parameters
+                        .Query(q => q.Single("a", int.Parse), cf => Index)
+                        // Or not required with default value
+                        .Query(q => q.Single("a", int.Parse, 0), cf => Index)
+                        // You can extract any data from context by your own extractor
+                        // and declare it as parameter for your method
+                        .Query(q => q.Context(ct => ParseEntity(ct.InputStream), 4), cf => Index)
+                    ),
+                // Declare nested resources
+                root => root
+                    // With concrete name
+                    .Named("about", methods => methods
+                        .Method("get", h => h
+                            .Query(q => q, cf => cf().About)))
+                    .Named("news", ioc.Resolve<NewsController>,
+                        methods => methods
+                            .Method("get", h => h
+                                .Query(q => q
+                                        .Single("page", int.Parse, 0)
+                                        .Single("order", bool.Parse, false),
+                                    cf => cf().Index)),
+                        news => news
+                            // Or use a value as a name
+                            .Valued(int.Parse,
+                                methods => methods
+                                    .Method("get", h => h
+                                        .Query(q => q, cf => cf().Get))))))
+        .Run(cts.Token).Wait();
+}
 ```

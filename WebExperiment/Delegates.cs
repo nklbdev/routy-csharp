@@ -9,6 +9,9 @@ namespace WebExperiment
     // Factory
     public delegate T Factory<out T>();
     
+    // Transformer
+    public delegate TOut Transformer<in TIn, out TOut>(TIn input);
+    
     // MainHandler
     public delegate Task<TResult> MainHandler<in TContext, TResult>(string httpMethod, Uri uri, TContext context, CancellationToken ct);
     
