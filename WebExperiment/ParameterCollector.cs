@@ -66,6 +66,12 @@ namespace WebExperiment
         
         public ParameterCollectorHandle<TContext, TResult, TP1, TP2> CreateHandler<TP1, TP2>(AsyncActionFactory<TController, TP1, TP2, TResult> actionFactory) =>
             (query, context, p1, p2, ct) => actionFactory(_controllerFactory)(p1, p2);
+        
+        public ParameterCollectorHandle<TContext, TResult, TP1, TP2, TP3> CreateHandler<TP1, TP2, TP3>(ActionFactory<TController, TP1, TP2, TP3, TResult> actionFactory) =>
+            (query, context, p1, p2, p3, ct) => Task.FromResult(actionFactory(_controllerFactory)(p1, p2, p3));
+        
+        public ParameterCollectorHandle<TContext, TResult, TP1, TP2, TP3> CreateHandler<TP1, TP2, TP3>(AsyncActionFactory<TController, TP1, TP2, TP3, TResult> actionFactory) =>
+            (query, context, p1, p2, p3, ct) => actionFactory(_controllerFactory)(p1, p2, p3);
     }
 
     public class ParameterCollector<TContext, TQ1, TResult, TController>
@@ -111,6 +117,12 @@ namespace WebExperiment
         
         public ParameterCollectorHandle<TContext, TResult, TP1, TP2> CreateHandler<TP1, TP2>(AsyncActionFactory<TController, TP1, TP2, TQ1, TResult> actionFactory) =>
             (query, context, p1, p2, ct) => actionFactory(_controllerFactory)(p1, p2, Q1(context, query, ct));
+        
+        public ParameterCollectorHandle<TContext, TResult, TP1, TP2, TP3> CreateHandler<TP1, TP2, TP3>(ActionFactory<TController, TP1, TP2, TP3, TQ1, TResult> actionFactory) =>
+            (query, context, p1, p2, p3, ct) => Task.FromResult(actionFactory(_controllerFactory)(p1, p2, p3, Q1(context, query, ct)));
+        
+        public ParameterCollectorHandle<TContext, TResult, TP1, TP2, TP3> CreateHandler<TP1, TP2, TP3>(AsyncActionFactory<TController, TP1, TP2, TP3, TQ1, TResult> actionFactory) =>
+            (query, context, p1, p2, p3, ct) => actionFactory(_controllerFactory)(p1, p2, p3, Q1(context, query, ct));
     }
 
     public class ParameterCollector<TContext, TQ1, TQ2, TResult, TController>
@@ -124,6 +136,21 @@ namespace WebExperiment
         
         public ValueExtractor<TContext, TQ1> Q1 { get; set; }
         public ValueExtractor<TContext, TQ2> Q2 { get; set; }
+        
+        public ParameterCollector<TContext, TQ1, TQ2, T, TResult, TController> Context<T>(Transformer<TContext, T> f, uint priority = 0) =>
+            new ParameterCollector<TContext, TQ1, TQ2, T, TResult, TController>(_controllerFactory) { Q1 = Q1, Q2 = Q2, Q3 = ParValExtBldr.CreateContext(f)};
+        
+        public ParameterCollector<TContext, TQ1, TQ2, T, TResult, TController> Single<T>(string name, Parser<T> parser) =>
+            new ParameterCollector<TContext, TQ1, TQ2, T, TResult, TController>(_controllerFactory) { Q1 = Q1, Q2 = Q2, Q3 = ParValExtBldr.CreateSingle<TContext, T>(name, parser) };
+        
+        public ParameterCollector<TContext, TQ1, TQ2, T, TResult, TController> Single<T>(string name, Parser<T> parser, T def) =>
+            new ParameterCollector<TContext, TQ1, TQ2, T, TResult, TController>(_controllerFactory) { Q1 = Q1, Q2 = Q2, Q3 = ParValExtBldr.CreateSingle<TContext, T>(name, parser, def) };
+        
+        public ParameterCollector<TContext, TQ1, TQ2, IEnumerable<T>, TResult, TController> Array<T>(string name, Parser<T> parser) =>
+            new ParameterCollector<TContext, TQ1, TQ2, IEnumerable<T>, TResult, TController>(_controllerFactory) { Q1 = Q1, Q2 = Q2, Q3 = ParValExtBldr.CreateArray<TContext, T>(name, parser) };
+        
+        public ParameterCollector<TContext, TQ1, TQ2, CancellationToken, TResult, TController> CancellationToken() =>
+            new ParameterCollector<TContext, TQ1, TQ2, CancellationToken, TResult, TController>(_controllerFactory) { Q1 = Q1, Q2 = Q2, Q3 = ParValExtBldr.CreateCancellationToken<TContext>()};
         
         public ParameterCollectorHandle<TContext, TResult> CreateHandler(ActionFactory<TController, TQ1, TQ2, TResult> actionFactory) =>
             (query, context, ct) => Task.FromResult(actionFactory(_controllerFactory)(Q1(context, query, ct), Q2(context, query, ct)));
@@ -142,5 +169,49 @@ namespace WebExperiment
         
         public ParameterCollectorHandle<TContext, TResult, TP1, TP2> CreateHandler<TP1, TP2>(AsyncActionFactory<TController, TP1, TP2, TQ1, TQ2, TResult> actionFactory) =>
             (query, context, p1, p2, ct) => actionFactory(_controllerFactory)(p1, p2, Q1(context, query, ct), Q2(context, query, ct));
+        
+        public ParameterCollectorHandle<TContext, TResult, TP1, TP2, TP3> CreateHandler<TP1, TP2, TP3>(ActionFactory<TController, TP1, TP2, TP3, TQ1, TQ2, TResult> actionFactory) =>
+            (query, context, p1, p2, p3, ct) => Task.FromResult(actionFactory(_controllerFactory)(p1, p2, p3, Q1(context, query, ct), Q2(context, query, ct)));
+        
+        public ParameterCollectorHandle<TContext, TResult, TP1, TP2, TP3> CreateHandler<TP1, TP2, TP3>(AsyncActionFactory<TController, TP1, TP2, TP3, TQ1, TQ2, TResult> actionFactory) =>
+            (query, context, p1, p2, p3, ct) => actionFactory(_controllerFactory)(p1, p2, p3, Q1(context, query, ct), Q2(context, query, ct));
+    }
+
+    public class ParameterCollector<TContext, TQ1, TQ2, TQ3, TResult, TController>
+    {
+        private readonly Factory<TController> _controllerFactory;
+
+        public ParameterCollector(Factory<TController> controllerFactory)
+        {
+            _controllerFactory = controllerFactory;
+        }
+
+        public ValueExtractor<TContext, TQ1> Q1 { get; set; }
+        public ValueExtractor<TContext, TQ2> Q2 { get; set; }
+        public ValueExtractor<TContext, TQ3> Q3 { get; set; }
+        
+        public ParameterCollectorHandle<TContext, TResult> CreateHandler(ActionFactory<TController, TQ1, TQ2, TQ3, TResult> actionFactory) =>
+            (query, context, ct) => Task.FromResult(actionFactory(_controllerFactory)(Q1(context, query, ct), Q2(context, query, ct), Q3(context, query, ct)));
+        
+        public ParameterCollectorHandle<TContext, TResult> CreateHandler(AsyncActionFactory<TController, TQ1, TQ2, TQ3, TResult> actionFactory) =>
+            (query, context, ct) => actionFactory(_controllerFactory)(Q1(context, query, ct), Q2(context, query, ct), Q3(context, query, ct));
+        
+        public ParameterCollectorHandle<TContext, TResult, TP1> CreateHandler<TP1>(ActionFactory<TController, TP1, TQ1, TQ2, TQ3, TResult> actionFactory) =>
+            (query, context, p1, ct) => Task.FromResult(actionFactory(_controllerFactory)(p1, Q1(context, query, ct), Q2(context, query, ct), Q3(context, query, ct)));
+        
+        public ParameterCollectorHandle<TContext, TResult, TP1> CreateHandler<TP1>(AsyncActionFactory<TController, TP1, TQ1, TQ2, TQ3, TResult> actionFactory) =>
+            (query, context, p1, ct) => actionFactory(_controllerFactory)(p1, Q1(context, query, ct), Q2(context, query, ct), Q3(context, query, ct));
+        
+        public ParameterCollectorHandle<TContext, TResult, TP1, TP2> CreateHandler<TP1, TP2>(ActionFactory<TController, TP1, TP2, TQ1, TQ2, TQ3, TResult> actionFactory) =>
+            (query, context, p1, p2, ct) => Task.FromResult(actionFactory(_controllerFactory)(p1, p2, Q1(context, query, ct), Q2(context, query, ct), Q3(context, query, ct)));
+        
+        public ParameterCollectorHandle<TContext, TResult, TP1, TP2> CreateHandler<TP1, TP2>(AsyncActionFactory<TController, TP1, TP2, TQ1, TQ2, TQ3, TResult> actionFactory) =>
+            (query, context, p1, p2, ct) => actionFactory(_controllerFactory)(p1, p2, Q1(context, query, ct), Q2(context, query, ct), Q3(context, query, ct));
+        
+        public ParameterCollectorHandle<TContext, TResult, TP1, TP2, TP3> CreateHandler<TP1, TP2, TP3>(ActionFactory<TController, TP1, TP2, TP3, TQ1, TQ2, TQ3, TResult> actionFactory) =>
+            (query, context, p1, p2, p3, ct) => Task.FromResult(actionFactory(_controllerFactory)(p1, p2, p3, Q1(context, query, ct), Q2(context, query, ct), Q3(context, query, ct)));
+        
+        public ParameterCollectorHandle<TContext, TResult, TP1, TP2, TP3> CreateHandler<TP1, TP2, TP3>(AsyncActionFactory<TController, TP1, TP2, TP3, TQ1, TQ2, TQ3, TResult> actionFactory) =>
+            (query, context, p1, p2, p3, ct) => actionFactory(_controllerFactory)(p1, p2, p3, Q1(context, query, ct), Q2(context, query, ct), Q3(context, query, ct));
     }
 }

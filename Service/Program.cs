@@ -34,7 +34,7 @@ namespace Service
 
         public delegate Func<HttpListenerResponse, Task> Ind(int a, bool b);
         
-        public static Func<HttpListenerResponse, Task> Index(int arg1, bool arg2)
+        public static System.Action<HttpListenerResponse> Index(int arg1, bool arg2)
         {
             throw new NotImplementedException();
         }
@@ -118,7 +118,13 @@ namespace Service
                                 // You can extract any data from context by your own extractor
                                 // and declare it as parameter for your method
                                 .Query(q => q.Context(ct => ParseEntity(ct.InputStream), 4), cf => Index)
-                            ),
+                                // And of cource you can rearrange your
+                                // multiple parameters as you wish
+                                .Query(q => q
+                                    .Single("a", bool.Parse)
+                                    .Single("b", int.Parse)
+                                    .Single("c", int.Parse),
+                                    cf => (a, b, c) => Index(b, a))),
                         // Declare nested resources
                         root => root
                             // With concrete name

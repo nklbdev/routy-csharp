@@ -69,6 +69,24 @@ namespace WebExperiment
             _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
+        
+        // sync
+        public QueryCollector<TContext, TResult, TController> Query<TQ1, TQ2, TQ3>(
+            ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TResult, TController> filler,
+            ActionFactory<TController, TQ1, TQ2, TQ3, TResult> actionFactory)
+        {
+            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            return this;
+        }
+        
+        // async
+        public QueryCollector<TContext, TResult, TController> Query<TQ1, TQ2, TQ3>(
+            ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TResult, TController> filler,
+            AsyncActionFactory<TController, TQ1, TQ2, TQ3, TResult> actionFactory)
+        {
+            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            return this;
+        }
 
         public async Task<TResult> Handle(NameValueCollection query, TContext context, CancellationToken ct)
         {
@@ -233,4 +251,79 @@ namespace WebExperiment
             throw new NotImplementedException();
         }
     }
+    
+    public class QueryCollector<TContext, TResult, TController, TP1, TP2, TP3>
+    {
+        private readonly Factory<TController> _controllerFactory;
+        private readonly List<ParameterCollectorHandle<TContext, TResult, TP1, TP2, TP3>> _handlers = new List<ParameterCollectorHandle<TContext, TResult, TP1, TP2, TP3>>();
+
+        public QueryCollector(Factory<TController> controllerFactory)
+        {
+            _controllerFactory = controllerFactory;
+        }
+        
+        public QueryCollector<TContext, TResult, TController, TP1, TP2, TP3> Query(
+            ParameterCollectorFiller<TContext, TResult, TController> filler,
+            ActionFactory<TController, TP1, TP2, TP3, TResult> actionFactory)
+        {
+            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            return this;
+        }
+        
+        public QueryCollector<TContext, TResult, TController, TP1, TP2, TP3> Query(
+            ParameterCollectorFiller<TContext, TResult, TController> filler,
+            AsyncActionFactory<TController, TP1, TP2, TP3, TResult> actionFactory)
+        {
+            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            return this;
+        }
+
+        public QueryCollector<TContext, TResult, TController, TP1, TP2, TP3> Query<TQ1>(
+            ParameterCollectorFiller<TContext, TQ1, TResult, TController> filler,
+            ActionFactory<TController, TP1, TP2, TP3, TQ1, TResult> actionFactory)
+        {
+            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            return this;
+        }
+        
+        public QueryCollector<TContext, TResult, TController, TP1, TP2, TP3> Query<TQ1>(
+            ParameterCollectorFiller<TContext, TQ1, TResult, TController> filler,
+            AsyncActionFactory<TController, TP1, TP2, TP3, TQ1, TResult> actionFactory)
+        {
+            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            return this;
+        }
+        
+        public QueryCollector<TContext, TResult, TController, TP1, TP2, TP3> Query<TQ1, TQ2>(
+            ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController> filler,
+            ActionFactory<TController, TP1, TP2, TP3, TQ1, TQ2, TResult> actionFactory)
+        {
+            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            return this;
+        }
+        
+        public QueryCollector<TContext, TResult, TController, TP1, TP2, TP3> Query<TQ1, TQ2>(
+            ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController> filler,
+            AsyncActionFactory<TController, TP1, TP2, TP3, TQ1, TQ2, TResult> actionFactory)
+        {
+            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            return this;
+        }
+        
+        public async Task<TResult> Handle(NameValueCollection query, TContext context, TP1 p1, TP2 p2, TP3 p3, CancellationToken ct)
+        {
+            foreach (var some in _handlers)
+            {
+                try
+                {
+                    return await some(query, context, p1, p2, p3, ct);
+                }
+                catch
+                {
+                }
+            }
+            throw new NotImplementedException();
+        }
+    }
+    
 }

@@ -37,7 +37,13 @@ public static void Main(string[] args)
                         // You can extract any data from context by your own extractor
                         // and declare it as parameter for your method
                         .Query(q => q.Context(ct => ParseEntity(ct.InputStream), 4), cf => Index)
-                    ),
+                        // And of cource you can rearrange your
+                        // multiple parameters as you wish
+                        .Query(q => q
+                            .Single("a", bool.Parse)
+                            .Single("b", int.Parse)
+                            .Single("c", int.Parse),
+                            cf => (a, b, c) => Index(b, a))),
                 // Declare nested resources
                 root => root
                     // With concrete name
