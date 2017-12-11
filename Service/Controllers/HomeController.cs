@@ -11,27 +11,23 @@ namespace Service.Controllers
 
     internal class HomeController
     {
-        private static List<string> Answers = new List<string>();
+        private static readonly List<string> Answers = new List<string>();
         
         private readonly Func<ICollection<string>, View> _indexViewFactory;
         private readonly ViewFactory _aboutViewFactory;
-//        private readonly Func<string, View> _postAnswerViewFactory;
 
         public HomeController(
             [KeyFilter("Index")] Func<ICollection<string>, View> indexViewFactory,
-            [KeyFilter("About")] ViewFactory aboutViewFactory//,
-//            [KeyFilter("PostAnswer")] Func<string, View> postAnswerViewFactory
-            )
+            [KeyFilter("About")] ViewFactory aboutViewFactory)
         {
             _indexViewFactory = indexViewFactory;
             _aboutViewFactory = aboutViewFactory;
-//            _postAnswerViewFactory = postAnswerViewFactory;
         }
 
-//        public Action<HttpListenerResponse> PostAnswer(SimpleForm form) => _postAnswerViewFactory(form.Answer).Invoke;
         public Action<HttpListenerResponse> PostAnswer(SimpleForm form)
         {
             Answers.Add(form.Answer);
+            // todo make redirect
             return Index();
         }
 

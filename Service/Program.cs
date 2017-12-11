@@ -14,11 +14,6 @@ using WebExperiment;
 
 namespace Service
 {
-    public class Entity
-    {
-        //
-    }
-    
     public static class Program
     {
         private static readonly Dictionary<Type, Parser<object>> _parsers = new Dictionary<Type, Parser<object>>
@@ -85,7 +80,7 @@ namespace Service
                         root => root
                             .Named("about", methods => methods
                                 .Method("get", h => h
-                                    .Query(q => q, cf => cf().About)))
+                                    .Query(q => q, cf => () => c.ResolveKeyed<ViewFactory>("About")().Invoke)))
                             .Named("news", c.Resolve<NewsController>,
                                 methods => methods
                                     .Method("get", h => h
