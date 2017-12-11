@@ -21,7 +21,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TResult, TController> filler,
             ActionFactory<TController, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -30,7 +30,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TResult, TController> filler,
             AsyncActionFactory<TController, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -39,7 +39,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TQ1, TResult, TController> filler,
             ActionFactory<TController, TQ1, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -48,7 +48,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TQ1, TResult, TController> filler,
             AsyncActionFactory<TController, TQ1, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -57,7 +57,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController> filler,
             ActionFactory<TController, TQ1, TQ2, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -66,7 +66,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController> filler,
             AsyncActionFactory<TController, TQ1, TQ2, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -75,7 +75,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TResult, TController> filler,
             ActionFactory<TController, TQ1, TQ2, TQ3, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -84,7 +84,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TResult, TController> filler,
             AsyncActionFactory<TController, TQ1, TQ2, TQ3, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
 
@@ -118,7 +118,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TResult, TController> filler,
             ActionFactory<TController, TP1, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
 
@@ -126,7 +126,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TResult, TController> filler,
             AsyncActionFactory<TController, TP1, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -134,7 +134,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TQ1, TResult, TController> filler,
             ActionFactory<TController, TP1, TQ1, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -142,7 +142,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TQ1, TResult, TController> filler,
             AsyncActionFactory<TController, TP1, TQ1, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -150,7 +150,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController> filler,
             ActionFactory<TController, TP1, TQ1, TQ2, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -158,7 +158,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController> filler,
             AsyncActionFactory<TController, TP1, TQ1, TQ2, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -192,7 +192,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TResult, TController> filler,
             ActionFactory<TController, TP1, TP2, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -200,7 +200,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TResult, TController> filler,
             AsyncActionFactory<TController, TP1, TP2, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
 
@@ -208,7 +208,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TQ1, TResult, TController> filler,
             ActionFactory<TController, TP1, TP2, TQ1, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -216,7 +216,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TQ1, TResult, TController> filler,
             AsyncActionFactory<TController, TP1, TP2, TQ1, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -224,7 +224,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController> filler,
             ActionFactory<TController, TP1, TP2, TQ1, TQ2, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -232,7 +232,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController> filler,
             AsyncActionFactory<TController, TP1, TP2, TQ1, TQ2, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -266,7 +266,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TResult, TController> filler,
             ActionFactory<TController, TP1, TP2, TP3, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -274,7 +274,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TResult, TController> filler,
             AsyncActionFactory<TController, TP1, TP2, TP3, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
 
@@ -282,7 +282,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TQ1, TResult, TController> filler,
             ActionFactory<TController, TP1, TP2, TP3, TQ1, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -290,7 +290,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TQ1, TResult, TController> filler,
             AsyncActionFactory<TController, TP1, TP2, TP3, TQ1, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -298,7 +298,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController> filler,
             ActionFactory<TController, TP1, TP2, TP3, TQ1, TQ2, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
@@ -306,7 +306,7 @@ namespace WebExperiment
             ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController> filler,
             AsyncActionFactory<TController, TP1, TP2, TP3, TQ1, TQ2, TResult> actionFactory)
         {
-            _handlers.Add(filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
             return this;
         }
         
