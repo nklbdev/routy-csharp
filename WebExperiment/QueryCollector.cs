@@ -96,11 +96,11 @@ namespace WebExperiment
                 {
                     return await handler(query, context, ct);
                 }
-                catch
+                catch(Exception e)
                 {
                 }
             }
-            throw new NotImplementedException();
+            throw new NotImplementedException("25");
         }
     }
 
@@ -174,7 +174,7 @@ namespace WebExperiment
                 {
                 }
             }
-            throw new NotImplementedException();
+            throw new NotImplementedException("26");
         }
     }
     
@@ -248,7 +248,7 @@ namespace WebExperiment
                 {
                 }
             }
-            throw new NotImplementedException();
+            throw new NotImplementedException("27");
         }
     }
     
@@ -322,7 +322,7 @@ namespace WebExperiment
                 {
                 }
             }
-            throw new NotImplementedException();
+            throw new NotImplementedException("28");
         }
     }
     

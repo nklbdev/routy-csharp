@@ -23,7 +23,7 @@ namespace WebExperiment
         public async Task<TResult> Handle(string httpMethod, IEnumerable<string> uriSegments, NameValueCollection query, TContext context, CancellationToken ct)
         {
             if (!uriSegments.Any())
-                throw new NotImplementedException();
+                throw new NotImplementedException("6");
 
             var tail = uriSegments.Skip(1).ToArray();
 

@@ -1,12 +1,15 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+using System.Web;
+using Autofac;
+using Autofac.Features.AttributeFilters;
 using Service.Controllers;
+using Service.Forms;
+using Service.Views;
 using WebExperiment;
 
 namespace Service
@@ -18,130 +21,72 @@ namespace Service
     
     public static class Program
     {
-        public static T Resolve<T>(object par)
+        private static readonly Dictionary<Type, Parser<object>> _parsers = new Dictionary<Type, Parser<object>>
         {
-            throw new NotImplementedException();
-        }
-
-        public static Entity EntityParser(Stream stream)
+            [typeof(string)] = s => s,
+            [typeof(bool)] = s => bool.Parse(s),
+            [typeof(int)] = s => int.Parse(s)
+        };
+        
+        public static T FormUrlencodedDeserialize<T>(Stream stream) where T : new()
         {
-            throw new NotImplementedException();
+            using (var reader = new StreamReader(stream))
+            {
+                var content = reader.ReadToEnd();
+                var decodedContent = HttpUtility.UrlDecode(content);
+                var nvc = HttpUtility.ParseQueryString(decodedContent);
+                var t = new T();
+                foreach (var kvp in nvc.AllKeys)
+                {
+                    var pi = typeof(T).GetProperty(kvp, BindingFlags.Public | BindingFlags.Instance);
+                    if (pi == null)
+                        continue;
+                    
+                    if (_parsers.TryGetValue(pi.PropertyType, out var parser))
+                        pi.SetValue(t, parser(nvc[kvp]), null);
+                    else
+                        throw new NotImplementedException("21");
+                }
+                return t;
+            }
         }
         
-        public static T Extract<T>(HttpListenerRequest request)
-        {
-            throw new NotImplementedException();
-        }
-
-        public delegate Func<HttpListenerResponse, Task> Ind(int a, bool b);
-        
-        public static System.Action<HttpListenerResponse> Index(int arg1, bool arg2)
-        {
-            throw new NotImplementedException();
-        }
-        
-        public static System.Action<HttpListenerResponse> Index()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public static System.Action<HttpListenerResponse> Index(Entity entity)
-        {
-            throw new NotImplementedException();
-        }
-        
-        public static System.Action<HttpListenerResponse> Index(int a)
-        {
-            throw new NotImplementedException();
-        }
-        
-        public static System.Action<HttpListenerResponse> Index(IEnumerable<int> a)
-        {
-            throw new NotImplementedException();
-        }
-        
-        public static System.Action<HttpListenerResponse> Index(Entity entity, int a)
-        {
-            throw new NotImplementedException();
-        }
-        
-        public static async Task<System.Action<HttpListenerResponse>> IndexAsync(Entity entity, CancellationToken ct)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static Entity ParseEntity(Stream stream)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static async Task<System.Action<HttpListenerResponse>> IndexAsync()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public static async Task<System.Action<HttpListenerResponse>> IndexAsync(CancellationToken ct)
-        {
-            throw new NotImplementedException();
-        }
-
         public static void Main(string[] args)
         {
             var cts = new CancellationTokenSource();
-            var ioc = new IoC();
+
+            var cb = new ContainerBuilder();
+            cb.RegisterType<HomeController>().AsSelf().WithAttributeFiltering();
+            cb.RegisterType<NewsController>().AsSelf();
+            cb.RegisterType<IndexView>().AsSelf();
+            cb.RegisterType<AboutView>().AsSelf();
+            cb.Register<ViewFactory>(ctxt =>
+            {
+                var cwer = ctxt.Resolve<IComponentContext>();
+                return () => cwer.Resolve<AboutView>().Show;
+            }).Keyed<ViewFactory>("About");
+            cb.Register<Func<ICollection<string>, View>>(ctxt =>
+            {
+                var cwer = ctxt.Resolve<IComponentContext>();
+                return answers =>
+                {
+                    var view = cwer.Resolve<IndexView>();
+                    view.Answers = answers;
+                    return view.Show;
+                };
+            }).Keyed<Func<ICollection<string>, View>>("Index");
+            var c = cb.Build();
 
             new Server(Resource<HttpListenerRequest, System.Action<HttpListenerResponse>>
-                    // Pass default controller factory to root resource
-                    .Root(ioc.Resolve<HomeController>,
+                    .Root(c.Resolve<HomeController>,
                         methods => methods
-                            // You can declare HTTP methods with many handlers
-                            // (Declare simple handlers first)
-                            .Method("get", h => h
-                                // You can bind controller method
-                                .Query(q => q, cf => cf().Index)
-                                // or other controller method
-                                .Query(q => q, cf => ioc.Resolve<HomeController>().Index)
-                                // or async controller method
-                                .Query(q => q, cf => cf().IndexAsync)
-                                // or pass cancellation token to async method
-                                .Query(q => q.CancellationToken(), cf => cf().IndexAsync)
-                                // You also can bind another static method
-                                .Query(q => q, cf => Index)
-                                // or static asyncs
-                                .Query(q => q, cf => IndexAsync)
-                                .Query(q => q.CancellationToken(), cf => IndexAsync)
-                                // You can declare required query parameters
-                                .Query(q => q.Single("a", int.Parse), cf => Index)
-                                // Or not required with default value
-                                .Query(q => q.Single("a", int.Parse, 0), cf => Index)
-                                // Or array-parameters
-                                .Query(q => q.Array("a", int.Parse), cf => Index)
-                                // You can extract any data from context by your own extractor
-                                // and declare it as parameter for your method
-                                .Query(q => q.Context(ct => ParseEntity(ct.InputStream), 4), cf => Index)
-                                .Query(q => q.Context(ct =>
-                                {
-                                    var serializer = new JsonSerializer();
-                                    using (var sr = new StreamReader(ct.InputStream))
-                                    using (var jsonTextReader = new JsonTextReader(sr))
-                                        return serializer.Deserialize<Entity>(jsonTextReader);
-                                }, 4), cf => Index)
-                                // And of cource you can rearrange your
-                                // multiple parameters as you wish
-                                .Query(q => q
-                                    .Single("a", bool.Parse)
-                                    .Single("b", int.Parse)
-                                    .Single("c", int.Parse),
-                                    cf => (a, b, c) => Index(b, a))),
-                        // Declare nested resources
+                            .Method("get", h => h.Query(q => q, cf => cf().Index))
+                            .Method("post", h => h.Query(q => q.Context(ct => FormUrlencodedDeserialize<SimpleForm>(ct.InputStream)), cf => cf().PostAnswer)),
                         root => root
-                            // With concrete name
-                            // And with default controller factory from parent resource
                             .Named("about", methods => methods
                                 .Method("get", h => h
                                     .Query(q => q, cf => cf().About)))
-                            // Or with other controller factory
-                            .Named("news", ioc.Resolve<NewsController>,
+                            .Named("news", c.Resolve<NewsController>,
                                 methods => methods
                                     .Method("get", h => h
                                         .Query(q => q
@@ -149,13 +94,11 @@ namespace Service
                                                 .Single("order", bool.Parse, false),
                                             cf => cf().Index)),
                                 news => news
-                                    // Or use a value as a name
-                                    // (with controller factory from parent resource or new)
                                     .Valued(int.Parse,
                                         methods => methods
                                             .Method("get", h => h
                                                 .Query(q => q, cf => cf().Get))))))
-                .Run(cts.Token).Wait();
+                .RunAsync(cts.Token).Wait();
         }
     }
 }

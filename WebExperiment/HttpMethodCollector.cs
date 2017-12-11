@@ -26,9 +26,9 @@ namespace WebExperiment
 
         public async Task<TResult> Handle(string httpMethod, NameValueCollection query, TContext context, CancellationToken ct)
         {
-            if (_queryCollectors.TryGetValue(httpMethod, out var queryCollector))
+            if (_queryCollectors.TryGetValue(httpMethod.ToLower(), out var queryCollector))
                 return await queryCollector.Handle(query, context, ct);
-            throw new NotImplementedException();
+            throw new NotImplementedException("22");
         }
     }
     
@@ -52,9 +52,9 @@ namespace WebExperiment
         
         public async Task<TResult> Handle(string httpMethod, NameValueCollection query, TContext context, TP1 p1, CancellationToken ct)
         {
-            if (_queryCollectors.TryGetValue(httpMethod, out var queryCollector))
+            if (_queryCollectors.TryGetValue(httpMethod.ToLower(), out var queryCollector))
                 return await queryCollector.Handle(query, context, p1, ct);
-            throw new NotImplementedException();
+            throw new NotImplementedException("23");
         }
     }
     
@@ -78,9 +78,9 @@ namespace WebExperiment
         
         public async Task<TResult> Handle(string httpMethod, NameValueCollection query, TContext context, TP1 p1, TP2 p2, CancellationToken ct)
         {
-            if (_queryCollectors.TryGetValue(httpMethod, out var queryCollector))
+            if (_queryCollectors.TryGetValue(httpMethod.ToLower(), out var queryCollector))
                 return await queryCollector.Handle(query, context, p1, p2, ct);
-            throw new NotImplementedException();
+            throw new NotImplementedException("24");
         }
     }
 }

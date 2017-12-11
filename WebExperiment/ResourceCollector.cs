@@ -22,13 +22,15 @@ namespace WebExperiment
             HttpMethodCollectorFiller<TContext, TResult, TController> httpMethodCollectorFiller = null,
             ResourceCollectorFiller<TContext, TResult, TController> nestedResourceCollectorFiller = null
             ) => Named(name, _controllerFactory, httpMethodCollectorFiller, nestedResourceCollectorFiller);
-
+        
         public ResourceCollector<TContext, TResult, TController> Named<TNewController>(string name,
             Factory<TNewController> controllerFactory,
             HttpMethodCollectorFiller<TContext, TResult, TNewController> httpMethodCollectorFiller = null,
             ResourceCollectorFiller<TContext, TResult, TNewController> nestedResourceCollectorFiller = null
             )
         {
+            if (httpMethodCollectorFiller == null) httpMethodCollectorFiller = x => x;
+            if (nestedResourceCollectorFiller == null) nestedResourceCollectorFiller = x => x;
             _namedResourceHandlers[name] = new NamedResource<TContext, TResult>(
                 httpMethodCollectorFiller(new HttpMethodCollector<TContext, TResult, TNewController>(controllerFactory)).Handle,
                 nestedResourceCollectorFiller(new ResourceCollector<TContext, TResult, TNewController>(controllerFactory)).Handle).Handle;
@@ -46,6 +48,8 @@ namespace WebExperiment
             ResourceCollectorFiller<TContext, TResult, TNewController, TValue> nestedResourceCollectorFiller = null
             )
         {
+            if (httpMethodCollectorFiller == null) httpMethodCollectorFiller = x => x;
+            if (nestedResourceCollectorFiller == null) nestedResourceCollectorFiller = x => x;
             _valuedResourceHandlers.Add(new ValuedResource<TContext, TResult, TValue>(
                 parser,
                 httpMethodCollectorFiller(new HttpMethodCollector<TContext, TResult, TNewController, TValue>(controllerFactory)).Handle,
@@ -56,7 +60,7 @@ namespace WebExperiment
         public async Task<TResult> Handle(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, CancellationToken ct)
         {
             if (!urlSegments.Any())
-                throw new NotImplementedException();
+                throw new NotImplementedException("15");
             
             var urlHead = urlSegments.First();
 
@@ -73,7 +77,7 @@ namespace WebExperiment
                     
                 }
             
-            throw new NotImplementedException();
+            throw new NotImplementedException("16");
         }
     }
 
@@ -91,7 +95,7 @@ namespace WebExperiment
         public async Task<TResult> Handle(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 p1, CancellationToken ct)
         {
             if (!urlSegments.Any())
-                throw new NotImplementedException();
+                throw new NotImplementedException("17");
             
             var urlHead = urlSegments.First();
 
@@ -108,7 +112,7 @@ namespace WebExperiment
                     
                 }
             
-            throw new NotImplementedException();
+            throw new NotImplementedException("18");
         }
     }
     
@@ -126,7 +130,7 @@ namespace WebExperiment
         public async Task<TResult> Handle(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 p1, TP2 p2, CancellationToken ct)
         {
             if (!urlSegments.Any())
-                throw new NotImplementedException();
+                throw new NotImplementedException("19");
             
             var urlHead = urlSegments.First();
 
@@ -143,7 +147,7 @@ namespace WebExperiment
                     
                 }
             
-            throw new NotImplementedException();
+            throw new NotImplementedException("20");
         }
     }
 }

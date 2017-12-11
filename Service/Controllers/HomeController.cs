@@ -1,39 +1,42 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using Autofac.Features.AttributeFilters;
+using Service.Forms;
 
 namespace Service.Controllers
 {
+    public delegate void View(HttpListenerResponse response);
+    public delegate View ViewFactory();
+
     internal class HomeController
     {
-        public Action<HttpListenerResponse> Index() => r =>
-        {
-            var bytes = Encoding.UTF8.GetBytes("Index");
-            using(var s = r.OutputStream)
-                s.Write(bytes, 0, bytes.Length);
-        };
+        private static List<string> Answers = new List<string>();
         
-        public async Task<Action<HttpListenerResponse>> IndexAsync() => r =>
-        {
-            var bytes = Encoding.UTF8.GetBytes("Index");
-            using(var s = r.OutputStream)
-                s.Write(bytes, 0, bytes.Length);
-        };
-        
-        public async Task<Action<HttpListenerResponse>> IndexAsync(CancellationToken ct) => r =>
-        {
-            var bytes = Encoding.UTF8.GetBytes("Index");
-            using(var s = r.OutputStream)
-                s.Write(bytes, 0, bytes.Length);
-        };
+        private readonly Func<ICollection<string>, View> _indexViewFactory;
+        private readonly ViewFactory _aboutViewFactory;
+//        private readonly Func<string, View> _postAnswerViewFactory;
 
-        public Action<HttpListenerResponse> About() => r =>
+        public HomeController(
+            [KeyFilter("Index")] Func<ICollection<string>, View> indexViewFactory,
+            [KeyFilter("About")] ViewFactory aboutViewFactory//,
+//            [KeyFilter("PostAnswer")] Func<string, View> postAnswerViewFactory
+            )
         {
-            var bytes = Encoding.UTF8.GetBytes("About");
-            using(var s = r.OutputStream)
-                s.Write(bytes, 0, bytes.Length);
-        };
+            _indexViewFactory = indexViewFactory;
+            _aboutViewFactory = aboutViewFactory;
+//            _postAnswerViewFactory = postAnswerViewFactory;
+        }
+
+//        public Action<HttpListenerResponse> PostAnswer(SimpleForm form) => _postAnswerViewFactory(form.Answer).Invoke;
+        public Action<HttpListenerResponse> PostAnswer(SimpleForm form)
+        {
+            Answers.Add(form.Answer);
+            return Index();
+        }
+
+        public Action<HttpListenerResponse> Index() => _indexViewFactory(Answers).Invoke;
+
+        public Action<HttpListenerResponse> About() => _aboutViewFactory().Invoke;
     }
 }
