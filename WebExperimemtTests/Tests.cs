@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Threading;
+using System.Web;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using WebExperiment;
@@ -95,18 +98,55 @@ namespace WebExperimemtTests
             stream.Position = 0;
             return stream;
         }
+        
+        public class SomeEntity
+        {
+            public int IntField { get; set; }
+            public bool BoolField { get; set; }
+            public string StringField { get; set; }
+        }
 
         public static bool HandleSomeEntity(SomeEntity entity)
         {
             return entity.IntField == 12 && entity.BoolField && entity.StringField == "asdf";
         }
-
-        public static T Deserialize<T>(Stream stream)
+        
+        public static T JsonDeserialize<T>(Stream stream)
         {
             var serializer = new JsonSerializer();
             using (var sr = new StreamReader(stream))
             using (var jsonTextReader = new JsonTextReader(sr))
                 return serializer.Deserialize<T>(jsonTextReader);
+        }
+        
+        private static readonly Dictionary<Type, Parser<object>> _parsers = new Dictionary<Type, Parser<object>>
+        {
+            [typeof(string)] = s => s,
+            [typeof(bool)] = s => bool.Parse(s),
+            [typeof(int)] = s => int.Parse(s)
+        };
+        
+        public static T FormUrlencodedDeserialize<T>(Stream stream) where T : new()
+        {
+            using (var reader = new StreamReader(stream))
+            {
+                var content = reader.ReadToEnd();
+                var decodedContent = HttpUtility.UrlDecode(content);
+                var nvc = HttpUtility.ParseQueryString(decodedContent);
+                var t = new T();
+                foreach (var kvp in nvc.AllKeys)
+                {
+                    var pi = typeof(T).GetProperty(kvp, BindingFlags.Public | BindingFlags.Instance);
+                    if (pi == null)
+                        continue;
+                    
+                    if (_parsers.TryGetValue(pi.PropertyType, out var parser))
+                        pi.SetValue(t, parser(nvc[kvp]), null);
+                    else
+                        throw new NotImplementedException();
+                }
+                return t;
+            }
         }
         
         [Test]
@@ -117,7 +157,7 @@ namespace WebExperimemtTests
             var handler = Resource<Stream, bool>.Root(() => new Ctrlr(ExpectedResponder),
                 m => m.Method("get", q => q
                     .Query(p => p
-                            .Context(Deserialize<SomeEntity>),
+                            .Context(JsonDeserialize<SomeEntity>),
                         cf => HandleSomeEntity)), n => n);
 
             var uri = new Uri("http://localhost");
@@ -130,12 +170,28 @@ namespace WebExperimemtTests
             var result = handler("get", uri, stream, _cts.Token).Result;
             Assert.IsTrue(result);
         }
-    }
+        
+        [Test]
+        public void TestHandleNonMultipart()
+        {
+            void ExpectedResponder(int response) { }
 
-    public class SomeEntity
-    {
-        public int IntField { get; set; }
-        public bool BoolField { get; set; }
-        public string StringField { get; set; }
+            var handler = Resource<Stream, bool>.Root(() => new Ctrlr(ExpectedResponder),
+                m => m.Method("get", q => q
+                    .Query(p => p
+                            .Context(FormUrlencodedDeserialize<SomeEntity>),
+                        cf => HandleSomeEntity)), n => n);
+
+            var uri = new Uri("http://localhost");
+            var body = "IntField=12&BoolField=true&StringField=asdf";
+            var stream = GenerateStreamFromString(body);
+            var result = handler("get", uri, stream, _cts.Token).Result;
+            Assert.IsTrue(result);
+        }
+        
+//        [Test]
+//        public void TestHandleMultipart()
+//        {
+//        }
     }
 }
