@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Service.Controllers;
 using WebExperiment;
 
@@ -69,7 +70,7 @@ namespace Service
             throw new NotImplementedException();
         }
 
-        public static Entity ParseEntity(Stream req)
+        public static Entity ParseEntity(Stream stream)
         {
             throw new NotImplementedException();
         }
@@ -118,6 +119,13 @@ namespace Service
                                 // You can extract any data from context by your own extractor
                                 // and declare it as parameter for your method
                                 .Query(q => q.Context(ct => ParseEntity(ct.InputStream), 4), cf => Index)
+                                .Query(q => q.Context(ct =>
+                                {
+                                    var serializer = new JsonSerializer();
+                                    using (var sr = new StreamReader(ct.InputStream))
+                                    using (var jsonTextReader = new JsonTextReader(sr))
+                                        return serializer.Deserialize<Entity>(jsonTextReader);
+                                }, 4), cf => Index)
                                 // And of cource you can rearrange your
                                 // multiple parameters as you wish
                                 .Query(q => q

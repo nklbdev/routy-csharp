@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using WebExperiment;
 
@@ -64,7 +66,6 @@ namespace WebExperimemtTests
                             cf => new Ctrlr2(ExpectedResponder).Method)),
                 n => n);
 
-//            var uri = new Uri("http://localhost?a=192");
             var uri = new Uri("http://localhost?s=asdfasdfasdf&b=true");
             var responder = handler("get", uri, 543, _cts.Token).Result;
             responder(100);
@@ -84,5 +85,57 @@ namespace WebExperimemtTests
             responder(100);
             Assert.AreEqual((System.Action<int>) ExpectedResponder, responder);
         }
+        
+        public static Stream GenerateStreamFromString(string s)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
+        }
+
+        public static bool HandleSomeEntity(SomeEntity entity)
+        {
+            return entity.IntField == 12 && entity.BoolField && entity.StringField == "asdf";
+        }
+
+        public static T Deserialize<T>(Stream stream)
+        {
+            var serializer = new JsonSerializer();
+            using (var sr = new StreamReader(stream))
+            using (var jsonTextReader = new JsonTextReader(sr))
+                return serializer.Deserialize<T>(jsonTextReader);
+        }
+        
+        [Test]
+        public void TestHandleJson()
+        {
+            void ExpectedResponder(int response) { }
+
+            var handler = Resource<Stream, bool>.Root(() => new Ctrlr(ExpectedResponder),
+                m => m.Method("get", q => q
+                    .Query(p => p
+                            .Context(Deserialize<SomeEntity>),
+                        cf => HandleSomeEntity)), n => n);
+
+            var uri = new Uri("http://localhost");
+            var json = @"{
+    ""intField"": 12,
+    ""boolField"": true,
+    ""stringField"": ""asdf"",
+}";
+            var stream = GenerateStreamFromString(json);
+            var result = handler("get", uri, stream, _cts.Token).Result;
+            Assert.IsTrue(result);
+        }
+    }
+
+    public class SomeEntity
+    {
+        public int IntField { get; set; }
+        public bool BoolField { get; set; }
+        public string StringField { get; set; }
     }
 }
