@@ -21,6 +21,7 @@ namespace WebExperiment
     // ValueExtractor
     public delegate T ValueExtractor<in TContext, out T>(TContext context, NameValueCollection parameters, CancellationToken ct);
 
+    // Mutator
     public delegate T Mutator<T>(T t);
 
     #region Handlers
@@ -36,20 +37,20 @@ namespace WebExperiment
     #region Handlers
     
     // ResourceCollectorHandle
-    public delegate Task<TResult> ResourceCollectorHandle<in TContext, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, CancellationToken ct);
-    public delegate Task<TResult> ResourceCollectorHandle<in TContext, TResult, in TP1>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 p1, CancellationToken ct);
-    public delegate Task<TResult> ResourceCollectorHandle<in TContext, TResult, in TP1, in TP2>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 p1, TP2 tp2, CancellationToken ct);
+    public delegate Task<TResult> ResourceCollectorHandler<in TContext, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, CancellationToken ct);
+    public delegate Task<TResult> ResourceCollectorHandler<in TContext, TResult, in TP1>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 p1, CancellationToken ct);
+    public delegate Task<TResult> ResourceCollectorHandler<in TContext, TResult, in TP1, in TP2>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 p1, TP2 tp2, CancellationToken ct);
     
     // HttpMethodCollectorHandle
-    public delegate Task<TResult> HttpMethodCollectorHandle<in TContext, TResult>(string httpMethod, NameValueCollection query, TContext context, CancellationToken ct);
-    public delegate Task<TResult> HttpMethodCollectorHandle<in TContext, TResult, in TP1>(string httpMethod, NameValueCollection query, TContext context, TP1 p1, CancellationToken ct);
-    public delegate Task<TResult> HttpMethodCollectorHandle<in TContext, TResult, in TP1, in TP2>(string httpMethod, NameValueCollection query, TContext context, TP1 p1, TP2 p2, CancellationToken ct);
+    public delegate Task<TResult> HttpMethodCollectorHandler<in TContext, TResult>(string httpMethod, NameValueCollection query, TContext context, CancellationToken ct);
+    public delegate Task<TResult> HttpMethodCollectorHandler<in TContext, TResult, in TP1>(string httpMethod, NameValueCollection query, TContext context, TP1 p1, CancellationToken ct);
+    public delegate Task<TResult> HttpMethodCollectorHandler<in TContext, TResult, in TP1, in TP2>(string httpMethod, NameValueCollection query, TContext context, TP1 p1, TP2 p2, CancellationToken ct);
     
     // ParameterCollectorHandle
-    public delegate Task<TResult> ParameterCollectorHandle<in TContext, TResult>(NameValueCollection query, TContext context, CancellationToken ct);
-    public delegate Task<TResult> ParameterCollectorHandle<in TContext, TResult, in TP1>(NameValueCollection query, TContext context, TP1 p1, CancellationToken ct);
-    public delegate Task<TResult> ParameterCollectorHandle<in TContext, TResult, in TP1, in TP2>(NameValueCollection query, TContext context, TP1 p1, TP2 p2, CancellationToken ct);
-    public delegate Task<TResult> ParameterCollectorHandle<in TContext, TResult, in TP1, in TP2, in TP3>(NameValueCollection query, TContext context, TP1 p1, TP2 p2, TP3 p3, CancellationToken ct);
+    public delegate Task<TResult> ParameterCollectorHandler<in TContext, TResult>(NameValueCollection query, TContext context, CancellationToken ct);
+    public delegate Task<TResult> ParameterCollectorHandler<in TContext, TResult, in TP1>(NameValueCollection query, TContext context, TP1 p1, CancellationToken ct);
+    public delegate Task<TResult> ParameterCollectorHandler<in TContext, TResult, in TP1, in TP2>(NameValueCollection query, TContext context, TP1 p1, TP2 p2, CancellationToken ct);
+    public delegate Task<TResult> ParameterCollectorHandler<in TContext, TResult, in TP1, in TP2, in TP3>(NameValueCollection query, TContext context, TP1 p1, TP2 p2, TP3 p3, CancellationToken ct);
 
     #endregion
 

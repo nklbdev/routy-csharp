@@ -9,7 +9,7 @@ namespace WebExperiment
     public class QueryCollector<TContext, TResult, TController>
     {
         private readonly Factory<TController> _controllerFactory;
-        private readonly List<ParameterCollectorHandle<TContext, TResult>> _handlers = new List<ParameterCollectorHandle<TContext, TResult>>();
+        private readonly List<ParameterCollectorHandler<TContext, TResult>> _handlers = new List<ParameterCollectorHandler<TContext, TResult>>();
 
         public QueryCollector(Factory<TController> controllerFactory)
         {
@@ -107,7 +107,7 @@ namespace WebExperiment
     public class QueryCollector<TContext, TResult, TController, TP1>
     {
         private readonly Factory<TController> _controllerFactory;
-        private readonly List<ParameterCollectorHandle<TContext, TResult, TP1>> _handlers = new List<ParameterCollectorHandle<TContext, TResult, TP1>>();
+        private readonly List<ParameterCollectorHandler<TContext, TResult, TP1>> _handlers = new List<ParameterCollectorHandler<TContext, TResult, TP1>>();
 
         public QueryCollector(Factory<TController> controllerFactory)
         {
@@ -181,7 +181,7 @@ namespace WebExperiment
     public class QueryCollector<TContext, TResult, TController, TP1, TP2>
     {
         private readonly Factory<TController> _controllerFactory;
-        private readonly List<ParameterCollectorHandle<TContext, TResult, TP1, TP2>> _handlers = new List<ParameterCollectorHandle<TContext, TResult, TP1, TP2>>();
+        private readonly List<ParameterCollectorHandler<TContext, TResult, TP1, TP2>> _handlers = new List<ParameterCollectorHandler<TContext, TResult, TP1, TP2>>();
 
         public QueryCollector(Factory<TController> controllerFactory)
         {
@@ -255,7 +255,7 @@ namespace WebExperiment
     public class QueryCollector<TContext, TResult, TController, TP1, TP2, TP3>
     {
         private readonly Factory<TController> _controllerFactory;
-        private readonly List<ParameterCollectorHandle<TContext, TResult, TP1, TP2, TP3>> _handlers = new List<ParameterCollectorHandle<TContext, TResult, TP1, TP2, TP3>>();
+        private readonly List<ParameterCollectorHandler<TContext, TResult, TP1, TP2, TP3>> _handlers = new List<ParameterCollectorHandler<TContext, TResult, TP1, TP2, TP3>>();
 
         public QueryCollector(Factory<TController> controllerFactory)
         {

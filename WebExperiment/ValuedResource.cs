@@ -10,13 +10,13 @@ namespace WebExperiment
     public class ValuedResource<TContext, TResult, TValue>
     {
         private readonly Parser<TValue> _parser;
-        private readonly HttpMethodCollectorHandle<TContext, TResult, TValue> _methodCollectorHandler;
-        private readonly ResourceCollectorHandle<TContext, TResult, TValue> _nestedResourceCollectorHandler;
+        private readonly HttpMethodCollectorHandler<TContext, TResult, TValue> _methodCollectorHandler;
+        private readonly ResourceCollectorHandler<TContext, TResult, TValue> _nestedResourceCollectorHandler;
         
         public ValuedResource(
             Parser<TValue> parser,
-            HttpMethodCollectorHandle<TContext, TResult, TValue> methodCollectorHandler,
-            ResourceCollectorHandle<TContext, TResult, TValue> nestedResourceCollectorHandler)
+            HttpMethodCollectorHandler<TContext, TResult, TValue> methodCollectorHandler,
+            ResourceCollectorHandler<TContext, TResult, TValue> nestedResourceCollectorHandler)
         {
             _parser = parser;
             _methodCollectorHandler = methodCollectorHandler;

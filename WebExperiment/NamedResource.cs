@@ -9,12 +9,12 @@ namespace WebExperiment
 {
     public class NamedResource<TContext, TResult>
     {
-        private readonly HttpMethodCollectorHandle<TContext, TResult> _methodCollectorHandler;
-        private readonly ResourceCollectorHandle<TContext, TResult> _nestedResourceCollectorHandler;
+        private readonly HttpMethodCollectorHandler<TContext, TResult> _methodCollectorHandler;
+        private readonly ResourceCollectorHandler<TContext, TResult> _nestedResourceCollectorHandler;
         
         public NamedResource(
-            HttpMethodCollectorHandle<TContext, TResult> methodCollectorHandler,
-            ResourceCollectorHandle<TContext, TResult> nestedResourceCollectorHandler)
+            HttpMethodCollectorHandler<TContext, TResult> methodCollectorHandler,
+            ResourceCollectorHandler<TContext, TResult> nestedResourceCollectorHandler)
         {
             _methodCollectorHandler = methodCollectorHandler;
             _nestedResourceCollectorHandler = nestedResourceCollectorHandler;

@@ -10,8 +10,8 @@ namespace WebExperiment
     public class ResourceCollector<TContext, TResult, TController>
     {
         private readonly Factory<TController> _controllerFactory;
-        private readonly Dictionary<string, ResourceCollectorHandle<TContext, TResult>> _namedResourceHandlers = new Dictionary<string, ResourceCollectorHandle<TContext, TResult>>();
-        private readonly List<ResourceCollectorHandle<TContext, TResult>> _valuedResourceHandlers = new List<ResourceCollectorHandle<TContext, TResult>>();
+        private readonly Dictionary<string, ResourceCollectorHandler<TContext, TResult>> _namedResourceHandlers = new Dictionary<string, ResourceCollectorHandler<TContext, TResult>>();
+        private readonly List<ResourceCollectorHandler<TContext, TResult>> _valuedResourceHandlers = new List<ResourceCollectorHandler<TContext, TResult>>();
 
         public ResourceCollector(Factory<TController> controllerFactory)
         {
@@ -84,8 +84,8 @@ namespace WebExperiment
     public class ResourceCollector<TContext, TResult, TController, TP1>
     {
         private readonly Factory<TController> _controllerFactory;
-        private readonly Dictionary<string, ResourceCollectorHandle<TContext, TResult, TP1>> _namedResourceHandlers = new Dictionary<string, ResourceCollectorHandle<TContext, TResult, TP1>>();
-        private readonly List<ResourceCollectorHandle<TContext, TResult, TP1>> _valuedResourceHandlers = new List<ResourceCollectorHandle<TContext, TResult, TP1>>();
+        private readonly Dictionary<string, ResourceCollectorHandler<TContext, TResult, TP1>> _namedResourceHandlers = new Dictionary<string, ResourceCollectorHandler<TContext, TResult, TP1>>();
+        private readonly List<ResourceCollectorHandler<TContext, TResult, TP1>> _valuedResourceHandlers = new List<ResourceCollectorHandler<TContext, TResult, TP1>>();
 
         public ResourceCollector(Factory<TController> controllerFactory)
         {
@@ -119,8 +119,8 @@ namespace WebExperiment
     public class ResourceCollector<TContext, TResult, TController, TP1, TP2>
     {
         private readonly Factory<TController> _controllerFactory;
-        private readonly Dictionary<string, ResourceCollectorHandle<TContext, TResult, TP1, TP2>> _namedResourceHandlers = new Dictionary<string, ResourceCollectorHandle<TContext, TResult, TP1, TP2>>();
-        private readonly List<ResourceCollectorHandle<TContext, TResult, TP1, TP2>> _valuedResourceHandlers = new List<ResourceCollectorHandle<TContext, TResult, TP1, TP2>>();
+        private readonly Dictionary<string, ResourceCollectorHandler<TContext, TResult, TP1, TP2>> _namedResourceHandlers = new Dictionary<string, ResourceCollectorHandler<TContext, TResult, TP1, TP2>>();
+        private readonly List<ResourceCollectorHandler<TContext, TResult, TP1, TP2>> _valuedResourceHandlers = new List<ResourceCollectorHandler<TContext, TResult, TP1, TP2>>();
 
         public ResourceCollector(Factory<TController> controllerFactory)
         {
