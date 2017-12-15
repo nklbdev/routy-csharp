@@ -18,7 +18,8 @@ namespace WebExperiment
 
         public HttpMethodCollector<TContext, TResult, TController> Method(
             string method,
-            QueryCollectorFiller<TContext, TResult, TController> filler)
+            Mutator<QueryCollector<TContext, TResult, TController>> filler
+            )
         {
             _queryCollectors[method] = filler(new QueryCollector<TContext, TResult, TController>(_controllerFactory));
             return this;
@@ -44,7 +45,7 @@ namespace WebExperiment
         
         public HttpMethodCollector<TContext, TResult, TController, TP1> Method(
             string method,
-            QueryCollectorFiller<TContext, TResult, TController, TP1> filler)
+            Mutator<QueryCollector<TContext, TResult, TController, TP1>> filler)
         {
             _queryCollectors[method] = filler(new QueryCollector<TContext, TResult, TController, TP1>(_controllerFactory));
             return this;
@@ -70,7 +71,7 @@ namespace WebExperiment
         
         public HttpMethodCollector<TContext, TResult, TController, TP1, TP2> Method(
             string method,
-            QueryCollectorFiller<TContext, TResult, TController, TP1, TP2> filler)
+            Mutator<QueryCollector<TContext, TResult, TController, TP1, TP2>> filler)
         {
             _queryCollectors[method] = filler(new QueryCollector<TContext, TResult, TController, TP1, TP2>(_controllerFactory));
             return this;

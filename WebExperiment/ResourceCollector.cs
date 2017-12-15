@@ -10,8 +10,8 @@ namespace WebExperiment
     public class ResourceCollector<TContext, TResult, TController>
     {
         private readonly Factory<TController> _controllerFactory;
-        private readonly Dictionary<string, ResourceHandle<TContext, TResult>> _namedResourceHandlers = new Dictionary<string, ResourceHandle<TContext, TResult>>();
-        private readonly List<ResourceHandle<TContext, TResult>> _valuedResourceHandlers = new List<ResourceHandle<TContext, TResult>>();
+        private readonly Dictionary<string, ResourceCollectorHandle<TContext, TResult>> _namedResourceHandlers = new Dictionary<string, ResourceCollectorHandle<TContext, TResult>>();
+        private readonly List<ResourceCollectorHandle<TContext, TResult>> _valuedResourceHandlers = new List<ResourceCollectorHandle<TContext, TResult>>();
 
         public ResourceCollector(Factory<TController> controllerFactory)
         {
@@ -19,14 +19,14 @@ namespace WebExperiment
         }
 
         public ResourceCollector<TContext, TResult, TController> Named(string name,
-            HttpMethodCollectorFiller<TContext, TResult, TController> httpMethodCollectorFiller = null,
-            ResourceCollectorFiller<TContext, TResult, TController> nestedResourceCollectorFiller = null
+            Mutator<HttpMethodCollector<TContext, TResult, TController>> httpMethodCollectorFiller = null,
+            Mutator<ResourceCollector<TContext, TResult, TController>> nestedResourceCollectorFiller = null
             ) => Named(name, _controllerFactory, httpMethodCollectorFiller, nestedResourceCollectorFiller);
         
         public ResourceCollector<TContext, TResult, TController> Named<TNewController>(string name,
             Factory<TNewController> controllerFactory,
-            HttpMethodCollectorFiller<TContext, TResult, TNewController> httpMethodCollectorFiller = null,
-            ResourceCollectorFiller<TContext, TResult, TNewController> nestedResourceCollectorFiller = null
+            Mutator<HttpMethodCollector<TContext, TResult, TNewController>> httpMethodCollectorFiller = null,
+            Mutator<ResourceCollector<TContext, TResult, TNewController>> nestedResourceCollectorFiller = null
             )
         {
             if (httpMethodCollectorFiller == null) httpMethodCollectorFiller = x => x;
@@ -38,14 +38,14 @@ namespace WebExperiment
         }
         
         public ResourceCollector<TContext, TResult, TController> Valued<TValue>(Parser<TValue> parser,
-            HttpMethodCollectorFiller<TContext, TResult, TController, TValue> httpMethodCollectorFiller = null,
-            ResourceCollectorFiller<TContext, TResult, TController, TValue> nestedResourceCollectorFiller = null
+            Mutator<HttpMethodCollector<TContext, TResult, TController, TValue>> httpMethodCollectorFiller = null,
+            Mutator<ResourceCollector<TContext, TResult, TController, TValue>> nestedResourceCollectorFiller = null
             ) => Valued(parser, _controllerFactory, httpMethodCollectorFiller, nestedResourceCollectorFiller);
 
         public ResourceCollector<TContext, TResult, TController> Valued<TValue, TNewController>(Parser<TValue> parser,
             Factory<TNewController> controllerFactory,
-            HttpMethodCollectorFiller<TContext, TResult, TNewController, TValue> httpMethodCollectorFiller = null,
-            ResourceCollectorFiller<TContext, TResult, TNewController, TValue> nestedResourceCollectorFiller = null
+            Mutator<HttpMethodCollector<TContext, TResult, TNewController, TValue>> httpMethodCollectorFiller = null,
+            Mutator<ResourceCollector<TContext, TResult, TNewController, TValue>> nestedResourceCollectorFiller = null
             )
         {
             if (httpMethodCollectorFiller == null) httpMethodCollectorFiller = x => x;
@@ -84,8 +84,8 @@ namespace WebExperiment
     public class ResourceCollector<TContext, TResult, TController, TP1>
     {
         private readonly Factory<TController> _controllerFactory;
-        private readonly Dictionary<string, ResourceHandle<TContext, TResult, TP1>> _namedResourceHandlers = new Dictionary<string, ResourceHandle<TContext, TResult, TP1>>();
-        private readonly List<ResourceHandle<TContext, TResult, TP1>> _valuedResourceHandlers = new List<ResourceHandle<TContext, TResult, TP1>>();
+        private readonly Dictionary<string, ResourceCollectorHandle<TContext, TResult, TP1>> _namedResourceHandlers = new Dictionary<string, ResourceCollectorHandle<TContext, TResult, TP1>>();
+        private readonly List<ResourceCollectorHandle<TContext, TResult, TP1>> _valuedResourceHandlers = new List<ResourceCollectorHandle<TContext, TResult, TP1>>();
 
         public ResourceCollector(Factory<TController> controllerFactory)
         {
@@ -119,8 +119,8 @@ namespace WebExperiment
     public class ResourceCollector<TContext, TResult, TController, TP1, TP2>
     {
         private readonly Factory<TController> _controllerFactory;
-        private readonly Dictionary<string, ResourceHandle<TContext, TResult, TP1, TP2>> _namedResourceHandlers = new Dictionary<string, ResourceHandle<TContext, TResult, TP1, TP2>>();
-        private readonly List<ResourceHandle<TContext, TResult, TP1, TP2>> _valuedResourceHandlers = new List<ResourceHandle<TContext, TResult, TP1, TP2>>();
+        private readonly Dictionary<string, ResourceCollectorHandle<TContext, TResult, TP1, TP2>> _namedResourceHandlers = new Dictionary<string, ResourceCollectorHandle<TContext, TResult, TP1, TP2>>();
+        private readonly List<ResourceCollectorHandle<TContext, TResult, TP1, TP2>> _valuedResourceHandlers = new List<ResourceCollectorHandle<TContext, TResult, TP1, TP2>>();
 
         public ResourceCollector(Factory<TController> controllerFactory)
         {

@@ -21,10 +21,12 @@ namespace Service.Controllers
             throw new NotImplementedException("11");
         }
 
-        public System.Action<HttpListenerResponse> Get(int arg)
+        public System.Action<HttpListenerResponse> Get(int arg) => r =>
         {
-            throw new NotImplementedException("12");
-        }
+            var bytes = Encoding.UTF8.GetBytes($"Concrete news page: {arg}");
+            using (var s = r.OutputStream)
+                s.Write(bytes, 0, bytes.Length);
+        };
 
         public Func<HttpListenerResponse, Task> Change(int arg1, string arg2, string arg3)
         {
