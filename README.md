@@ -1,4 +1,4 @@
-# Better REST API library for c#
+# The fairest REST API library for c#
 
 You can build your routing in this way:
 
