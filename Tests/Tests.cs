@@ -6,9 +6,9 @@ using System.Threading;
 using System.Web;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using WebExperiment;
+using Fairest;
 
-namespace WebExperimemtTests
+namespace Tests
 {
     [TestFixture]
     public class Tests

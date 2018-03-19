@@ -11,7 +11,7 @@ using Autofac.Features.AttributeFilters;
 using Service.Controllers;
 using Service.Forms;
 using Service.Views;
-using WebExperiment;
+using Fairest;
 
 namespace Service
 {

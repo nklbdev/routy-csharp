@@ -3,13 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.0.0
 MinimumVisualStudioVersion = 10.0.0.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebExperiment", "WebExperiment\WebExperiment.csproj", "{92DF8867-8B9C-4D18-A445-0B4AAC25924C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fairest", "Fairest\Fairest.csproj", "{92DF8867-8B9C-4D18-A445-0B4AAC25924C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{C4FBB2D5-AB6D-4877-ACAE-280F891EC796}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebExperimemtTests", "WebExperimemtTests\WebExperimemtTests.csproj", "{C694BC8A-6B09-42A5-9149-95029A4CC568}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebExperimentCodeGenerator", "WebExperimentCodeGenerator\WebExperimentCodeGenerator.csproj", "{CF9F6427-CE07-4A13-BB33-4E24364C44C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{C694BC8A-6B09-42A5-9149-95029A4CC568}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +27,6 @@ Global
 		{C694BC8A-6B09-42A5-9149-95029A4CC568}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C694BC8A-6B09-42A5-9149-95029A4CC568}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C694BC8A-6B09-42A5-9149-95029A4CC568}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CF9F6427-CE07-4A13-BB33-4E24364C44C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CF9F6427-CE07-4A13-BB33-4E24364C44C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CF9F6427-CE07-4A13-BB33-4E24364C44C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CF9F6427-CE07-4A13-BB33-4E24364C44C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

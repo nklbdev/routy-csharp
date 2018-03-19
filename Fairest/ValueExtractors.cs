@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace WebExperiment
+namespace Fairest
 {
     public static class ValueExtractors
     {

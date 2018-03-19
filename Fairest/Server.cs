@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using System.Web.Handlers;
 
-namespace WebExperiment
+namespace Fairest
 {
     public class Server
     {

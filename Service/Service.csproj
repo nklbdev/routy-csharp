@@ -70,9 +70,9 @@
     <Compile Include="Views\IndexView.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WebExperiment\WebExperiment.csproj">
+    <ProjectReference Include="..\Fairest\Fairest.csproj">
       <Project>{92DF8867-8B9C-4D18-A445-0B4AAC25924C}</Project>
-      <Name>WebExperiment</Name>
+      <Name>Fairest</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

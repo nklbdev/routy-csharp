@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Web;
 
-namespace WebExperiment
+namespace Fairest
 {
     public static class Resource<TContext, TResult>
     {
