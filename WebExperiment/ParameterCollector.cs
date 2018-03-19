@@ -108,6 +108,9 @@ namespace WebExperiment
         
         public ParameterCollectorHandler<TContext, TResult, TP1, TP2, TP3> CreateHandler<TP1, TP2, TP3>(AsyncActionFactory<TController, TP1, TP2, TP3, TQ1, TResult> actionFactory) =>
             (query, context, p1, p2, p3, ct) => actionFactory(_controllerFactory)(p1, p2, p3, Q1(context, query, ct));
+        
+        public ParameterCollectorHandler<TContext, TResult, TP1, TP2, TP3, TP4, TP5, TP6, TP7, TP8, TP9, TP10, TP11, TP12, TP13, TP14, TP15, TP16, TP17, TP18, TP19, TP20> CreateHandler2<TP1, TP2, TP3, TP4, TP5, TP6, TP7, TP8, TP9, TP10, TP11, TP12, TP13, TP14, TP15, TP16, TP17, TP18, TP19, TP20>(AsyncActionFactory<TController, TP1, TP2, TP3, TP4, TP5, TP6, TP7, TP8, TP9, TP10, TP11, TP12, TP13, TP14, TP15, TP16, TP17, TP18, TP19, TP20, TQ1, TResult> actionFactory) =>
+            (query, context, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, ct) => actionFactory(_controllerFactory)(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, Q1(context, query, ct));
     }
 
     public class ParameterCollector<TContext, TQ1, TQ2, TResult, TController>

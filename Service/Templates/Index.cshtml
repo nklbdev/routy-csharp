@@ -1,0 +1,21 @@
+@model bool
+@inherits 
+@*<html>*@
+@*    <head>*@
+@*        <title>{{title}}</title>*@
+@*    </head>*@
+@*    <body>*@
+@*        {{body}}*@
+@*        <form action="" method="post">*@
+@*            <p><b>Как по вашему мнению расшифровывается аббревиатура &quot;ОС&quot;?</b></p>*@
+@*            <p><input type="radio" name="Answer" value="a1">Офицерский состав<br>*@
+@*                <input type="radio" name="Answer" value="a2">Операционная система<br>*@
+@*                <input type="radio" name="Answer" value="a3">Большой полосатый мух</p>*@
+@*            <p><input type="submit"></p>*@
+@*        </form>*@
+@*        Ответы: <br>*@
+@*        {{#each answers}}*@
+@*            {{this}} <br>*@
+@*        {{/each}}*@
+@*    </body>*@
+@*</html>*@

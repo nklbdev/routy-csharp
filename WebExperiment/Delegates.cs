@@ -51,6 +51,7 @@ namespace WebExperiment
     public delegate Task<TResult> ParameterCollectorHandler<in TContext, TResult, in TP1>(NameValueCollection query, TContext context, TP1 p1, CancellationToken ct);
     public delegate Task<TResult> ParameterCollectorHandler<in TContext, TResult, in TP1, in TP2>(NameValueCollection query, TContext context, TP1 p1, TP2 p2, CancellationToken ct);
     public delegate Task<TResult> ParameterCollectorHandler<in TContext, TResult, in TP1, in TP2, in TP3>(NameValueCollection query, TContext context, TP1 p1, TP2 p2, TP3 p3, CancellationToken ct);
+    public delegate Task<TResult> ParameterCollectorHandler<in TContext, TResult, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, in TP11, in TP12, in TP13, in TP14, in TP15, in TP16, in TP17, in TP18, in TP19, in TP20>(NameValueCollection query, TContext context, TP1 p1, TP2 p2, TP3 p3, TP4 p4, TP5 p5, TP6 p6, TP7 p7, TP8 p8, TP9 p9, TP10 p10, TP11 p11, TP12 p12, TP13 p13, TP14 p14, TP15 p15, TP16 p16, TP17 p17, TP18 p18, TP19 p19, TP20 p20, CancellationToken ct);
 
     #endregion
 
@@ -71,6 +72,7 @@ namespace WebExperiment
     public delegate Task<TResult> AsyncAction<in T1, in T2, in T3, in T4, TResult>(T1 v1, T2 v2, T3 v3, T4 v4);
     public delegate Task<TResult> AsyncAction<in T1, in T2, in T3, in T4, in T5, TResult>(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5);
     public delegate Task<TResult> AsyncAction<in T1, in T2, in T3, in T4, in T5, in T6, TResult>(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6);
+    public delegate Task<TResult> AsyncAction<in T1, in T2, in T3, in T4, in T5, in T6, in T7, in T8, in T9, in T10, in T11, in T12, in T13, in T14, in T15, in T16, in T17, in T18, in T19, in T20, in T21, TResult>(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9, T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17, T18 v18, T19 v19, T20 v20, T21 v21);
 
     #endregion
     
@@ -91,6 +93,7 @@ namespace WebExperiment
     public delegate AsyncAction<T1, T2, T3, T4, TResult> AsyncActionFactory<in TController, in T1, in T2, in T3, in T4, TResult>(Factory<TController> controllerFactory);
     public delegate AsyncAction<T1, T2, T3, T4, T5, TResult> AsyncActionFactory<in TController, in T1, in T2, in T3, in T4, in T5, TResult>(Factory<TController> controllerFactory);
     public delegate AsyncAction<T1, T2, T3, T4, T5, T6, TResult> AsyncActionFactory<in TController, in T1, in T2, in T3, in T4, in T5, in T6, TResult>(Factory<TController> controllerFactory);
+    public delegate AsyncAction<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, TResult> AsyncActionFactory<in TController, in T1, in T2, in T3, in T4, in T5, in T6, in T7, in T8, in T9, in T10, in T11, in T12, in T13, in T14, in T15, in T16, in T17, in T18, in T19, in T20, in T21, TResult>(Factory<TController> controllerFactory);
     
     #endregion
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading;
@@ -30,19 +31,20 @@ namespace Service
                 var content = reader.ReadToEnd();
                 var decodedContent = HttpUtility.UrlDecode(content);
                 var nvc = HttpUtility.ParseQueryString(decodedContent);
-                var t = new T();
+                var instance = new T();
+                var type = typeof(T);
                 foreach (var kvp in nvc.AllKeys)
                 {
-                    var pi = typeof(T).GetProperty(kvp, BindingFlags.Public | BindingFlags.Instance);
+                    var pi = type.GetProperty(kvp, BindingFlags.Public | BindingFlags.Instance);
                     if (pi == null)
                         continue;
                     
                     if (_parsers.TryGetValue(pi.PropertyType, out var parser))
-                        pi.SetValue(t, parser(nvc[kvp]), null);
+                        pi.SetValue(instance, parser(nvc[kvp]), null);
                     else
                         throw new NotImplementedException("21");
                 }
-                return t;
+                return instance;
             }
         }
         

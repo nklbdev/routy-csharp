@@ -52,6 +52,8 @@
       <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc" />
+    <Reference Include="System.Web.WebPages" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -68,10 +70,6 @@
     <Compile Include="Views\IndexView.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Domain\Domain.csproj">
-      <Project>{1DC48993-E1CC-4629-A9BF-F4BE74062B7D}</Project>
-      <Name>Domain</Name>
-    </ProjectReference>
     <ProjectReference Include="..\WebExperiment\WebExperiment.csproj">
       <Project>{92DF8867-8B9C-4D18-A445-0B4AAC25924C}</Project>
       <Name>WebExperiment</Name>
@@ -85,6 +83,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Templates\About.hbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Error.cshtml" />
+    <Content Include="Templates\Index.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Templates\Index.hbs">
