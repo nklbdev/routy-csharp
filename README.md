@@ -1,5 +1,7 @@
 # Routy is a routing library for building RESTful APIs in c#
 
+(it is still in the experimental stage)
+
 ## Pros
 
 * It does not use reflection to create controllers and set action parameters
