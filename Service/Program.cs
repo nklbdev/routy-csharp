@@ -16,13 +16,6 @@ namespace Service
 {
     public static class Program
     {
-        private static readonly Dictionary<Type, Parser<object>> _parsers = new Dictionary<Type, Parser<object>>
-        {
-            [typeof(string)] = s => s,
-            [typeof(bool)] = s => bool.Parse(s),
-            [typeof(int)] = s => int.Parse(s)
-        };
-        
         public static T FormUrlencodedDeserialize<T>(Stream stream)
         {
             using (var reader = new StreamReader(stream))
