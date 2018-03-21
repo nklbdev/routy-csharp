@@ -1,4 +1,4 @@
-# Routy is a routing library for building RESTful APIs in c#
+# Routy is a routing library for building RESTful APIs in C#
 
 (it is still in the experimental stage)
 
