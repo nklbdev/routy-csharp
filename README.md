@@ -2,7 +2,7 @@
 
 (it is still in the experimental stage)
 
-## Pros
+## Pros:
 
 * It does not use reflection to create controllers and set action parameters
 * It does not use string-based URL templates
