@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.0.0
 MinimumVisualStudioVersion = 10.0.0.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fairest", "Fairest\Fairest.csproj", "{92DF8867-8B9C-4D18-A445-0B4AAC25924C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Routy", "Routy\Routy.csproj", "{92DF8867-8B9C-4D18-A445-0B4AAC25924C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{C4FBB2D5-AB6D-4877-ACAE-280F891EC796}"
 EndProject

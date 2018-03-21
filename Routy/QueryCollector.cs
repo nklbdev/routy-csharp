@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Fairest
+namespace Routy
 {
     public class QueryCollector<TContext, TResult, TController>
     {

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Fairest
+namespace Routy
 {
     public class ParameterCollector<TContext, TResult, TController>
     {

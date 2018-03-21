@@ -1,4 +1,4 @@
-# The fairest REST API library for c#
+# Routy is a routing library for building RESTful APIs in c#
 
 You can build your routing in this way:
 

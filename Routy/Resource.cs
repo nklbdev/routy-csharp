@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Web;
 
-namespace Fairest
+namespace Routy
 {
     public static class Resource<TContext, TResult>
     {

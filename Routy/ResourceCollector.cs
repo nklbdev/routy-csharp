@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Fairest
+namespace Routy
 {
     public class ResourceCollector<TContext, TResult, TController>
     {

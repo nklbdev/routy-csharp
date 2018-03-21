@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Fairest
+namespace Routy
 {
     // Factory
     public delegate T Factory<out T>();
