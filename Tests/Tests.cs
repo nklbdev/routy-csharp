@@ -6,7 +6,7 @@ using System.Threading;
 using System.Web;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using Fairest;
+using Routy;
 
 namespace Tests
 {

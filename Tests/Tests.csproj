@@ -50,9 +50,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Fairest\Fairest.csproj">
+    <ProjectReference Include="..\Routy\Routy.csproj">
       <Project>{92DF8867-8B9C-4D18-A445-0B4AAC25924C}</Project>
-      <Name>Fairest</Name>
+      <Name>Routy</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

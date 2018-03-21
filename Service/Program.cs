@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Reflection;
+using System.Net.Http.Formatting;
 using System.Threading;
-using System.Web;
+using System.Web.Http.ModelBinding;
 using Autofac;
 using Autofac.Features.AttributeFilters;
 using Service.Controllers;
 using Service.Forms;
 using Service.Views;
-using Fairest;
+using Routy;
 
 namespace Service
 {
@@ -24,28 +23,10 @@ namespace Service
             [typeof(int)] = s => int.Parse(s)
         };
         
-        public static T FormUrlencodedDeserialize<T>(Stream stream) where T : new()
+        public static T FormUrlencodedDeserialize<T>(Stream stream)
         {
             using (var reader = new StreamReader(stream))
-            {
-                var content = reader.ReadToEnd();
-                var decodedContent = HttpUtility.UrlDecode(content);
-                var nvc = HttpUtility.ParseQueryString(decodedContent);
-                var instance = new T();
-                var type = typeof(T);
-                foreach (var kvp in nvc.AllKeys)
-                {
-                    var pi = type.GetProperty(kvp, BindingFlags.Public | BindingFlags.Instance);
-                    if (pi == null)
-                        continue;
-                    
-                    if (_parsers.TryGetValue(pi.PropertyType, out var parser))
-                        pi.SetValue(instance, parser(nvc[kvp]), null);
-                    else
-                        throw new NotImplementedException("21");
-                }
-                return instance;
-            }
+                return new FormDataCollection(reader.ReadToEnd()).ReadAs<T>();
         }
         
         public static void Main(string[] args)
