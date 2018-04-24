@@ -64,7 +64,8 @@ namespace Routy
             
             var urlHead = urlSegments.First();
 
-            if (_namedResourceHandlers.TryGetValue(urlHead, out var namedResourceHandler))
+            ResourceCollectorHandler<TContext, TResult> namedResourceHandler;
+            if (_namedResourceHandlers.TryGetValue(urlHead, out namedResourceHandler))
                 return await namedResourceHandler(httpMethod, urlSegments, queryParameters, context, ct);
 
             foreach (var valuedResourceHandler in _valuedResourceHandlers)
@@ -99,7 +100,8 @@ namespace Routy
             
             var urlHead = urlSegments.First();
 
-            if (_namedResourceHandlers.TryGetValue(urlHead, out var namedResourceHandler))
+            ResourceCollectorHandler<TContext, TResult, TP1> namedResourceHandler;
+            if (_namedResourceHandlers.TryGetValue(urlHead, out namedResourceHandler))
                 return await namedResourceHandler(httpMethod, urlSegments, queryParameters, context, p1, ct);
 
             foreach (var valuedResourceHandler in _valuedResourceHandlers)
@@ -134,7 +136,8 @@ namespace Routy
             
             var urlHead = urlSegments.First();
 
-            if (_namedResourceHandlers.TryGetValue(urlHead, out var namedResourceHandler))
+            ResourceCollectorHandler<TContext, TResult, TP1, TP2> namedResourceHandler;
+            if (_namedResourceHandlers.TryGetValue(urlHead, out namedResourceHandler))
                 return await namedResourceHandler(httpMethod, urlSegments, queryParameters, context, p1, p2, ct);
 
             foreach (var valuedResourceHandler in _valuedResourceHandlers)
