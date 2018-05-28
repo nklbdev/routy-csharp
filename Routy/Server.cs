@@ -4,16 +4,15 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
-using System.Web.Handlers;
 
 namespace Routy
 {
     public class Server
     {
         private readonly HttpListener _httpListener;
-        private readonly MainHandler<HttpListenerRequest, System.Action<HttpListenerResponse>> _handler;
+        private readonly MainHandler<HttpListenerRequest, Action<HttpListenerResponse>> _handler;
 
-        public Server(MainHandler<HttpListenerRequest, System.Action<HttpListenerResponse>> handler)
+        public Server(MainHandler<HttpListenerRequest, Action<HttpListenerResponse>> handler)
         {
             _httpListener = new HttpListener();
             _handler = handler;

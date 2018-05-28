@@ -19,72 +19,72 @@ namespace Routy
         // sync
         public QueryCollector<TContext, TResult, TController> Query(
             ParameterCollectorFiller<TContext, TResult, TController> filler,
-            ActionFactory<TController, TResult> actionFactory)
+            HandlerFactory<TController, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
         // async
         public QueryCollector<TContext, TResult, TController> Query(
             ParameterCollectorFiller<TContext, TResult, TController> filler,
-            AsyncActionFactory<TController, TResult> actionFactory)
+            AsyncHandlerFactory<TController, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
         // sync
         public QueryCollector<TContext, TResult, TController> Query<TQ1>(
             ParameterCollectorFiller<TContext, TQ1, TResult, TController> filler,
-            ActionFactory<TController, TQ1, TResult> actionFactory)
+            HandlerFactory<TController, TQ1, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
         // async
         public QueryCollector<TContext, TResult, TController> Query<TQ1>(
             ParameterCollectorFiller<TContext, TQ1, TResult, TController> filler,
-            AsyncActionFactory<TController, TQ1, TResult> actionFactory)
+            AsyncHandlerFactory<TController, TQ1, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
         // sync
         public QueryCollector<TContext, TResult, TController> Query<TQ1, TQ2>(
             ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController> filler,
-            ActionFactory<TController, TQ1, TQ2, TResult> actionFactory)
+            HandlerFactory<TController, TQ1, TQ2, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
         // async
         public QueryCollector<TContext, TResult, TController> Query<TQ1, TQ2>(
             ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController> filler,
-            AsyncActionFactory<TController, TQ1, TQ2, TResult> actionFactory)
+            AsyncHandlerFactory<TController, TQ1, TQ2, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
         // sync
         public QueryCollector<TContext, TResult, TController> Query<TQ1, TQ2, TQ3>(
             ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TResult, TController> filler,
-            ActionFactory<TController, TQ1, TQ2, TQ3, TResult> actionFactory)
+            HandlerFactory<TController, TQ1, TQ2, TQ3, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
         // async
         public QueryCollector<TContext, TResult, TController> Query<TQ1, TQ2, TQ3>(
             ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TResult, TController> filler,
-            AsyncActionFactory<TController, TQ1, TQ2, TQ3, TResult> actionFactory)
+            AsyncHandlerFactory<TController, TQ1, TQ2, TQ3, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
 
@@ -116,49 +116,49 @@ namespace Routy
         
         public QueryCollector<TContext, TResult, TController, TP1> Query(
             ParameterCollectorFiller<TContext, TResult, TController> filler,
-            ActionFactory<TController, TP1, TResult> actionFactory)
+            HandlerFactory<TController, TP1, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
 
         public QueryCollector<TContext, TResult, TController, TP1> Query(
             ParameterCollectorFiller<TContext, TResult, TController> filler,
-            AsyncActionFactory<TController, TP1, TResult> actionFactory)
+            AsyncHandlerFactory<TController, TP1, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
         public QueryCollector<TContext, TResult, TController, TP1> Query<TQ1>(
             ParameterCollectorFiller<TContext, TQ1, TResult, TController> filler,
-            ActionFactory<TController, TP1, TQ1, TResult> actionFactory)
+            HandlerFactory<TController, TP1, TQ1, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
         public QueryCollector<TContext, TResult, TController, TP1> Query<TQ1>(
             ParameterCollectorFiller<TContext, TQ1, TResult, TController> filler,
-            AsyncActionFactory<TController, TP1, TQ1, TResult> actionFactory)
+            AsyncHandlerFactory<TController, TP1, TQ1, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
         public QueryCollector<TContext, TResult, TController, TP1> Query<TQ1, TQ2>(
             ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController> filler,
-            ActionFactory<TController, TP1, TQ1, TQ2, TResult> actionFactory)
+            HandlerFactory<TController, TP1, TQ1, TQ2, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
         public QueryCollector<TContext, TResult, TController, TP1> Query<TQ1, TQ2>(
             ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController> filler,
-            AsyncActionFactory<TController, TP1, TQ1, TQ2, TResult> actionFactory)
+            AsyncHandlerFactory<TController, TP1, TQ1, TQ2, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
@@ -190,49 +190,49 @@ namespace Routy
         
         public QueryCollector<TContext, TResult, TController, TP1, TP2> Query(
             ParameterCollectorFiller<TContext, TResult, TController> filler,
-            ActionFactory<TController, TP1, TP2, TResult> actionFactory)
+            HandlerFactory<TController, TP1, TP2, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
         public QueryCollector<TContext, TResult, TController, TP1, TP2> Query(
             ParameterCollectorFiller<TContext, TResult, TController> filler,
-            AsyncActionFactory<TController, TP1, TP2, TResult> actionFactory)
+            AsyncHandlerFactory<TController, TP1, TP2, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
 
         public QueryCollector<TContext, TResult, TController, TP1, TP2> Query<TQ1>(
             ParameterCollectorFiller<TContext, TQ1, TResult, TController> filler,
-            ActionFactory<TController, TP1, TP2, TQ1, TResult> actionFactory)
+            HandlerFactory<TController, TP1, TP2, TQ1, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
         public QueryCollector<TContext, TResult, TController, TP1, TP2> Query<TQ1>(
             ParameterCollectorFiller<TContext, TQ1, TResult, TController> filler,
-            AsyncActionFactory<TController, TP1, TP2, TQ1, TResult> actionFactory)
+            AsyncHandlerFactory<TController, TP1, TP2, TQ1, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
         public QueryCollector<TContext, TResult, TController, TP1, TP2> Query<TQ1, TQ2>(
             ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController> filler,
-            ActionFactory<TController, TP1, TP2, TQ1, TQ2, TResult> actionFactory)
+            HandlerFactory<TController, TP1, TP2, TQ1, TQ2, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
         public QueryCollector<TContext, TResult, TController, TP1, TP2> Query<TQ1, TQ2>(
             ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController> filler,
-            AsyncActionFactory<TController, TP1, TP2, TQ1, TQ2, TResult> actionFactory)
+            AsyncHandlerFactory<TController, TP1, TP2, TQ1, TQ2, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
@@ -264,49 +264,49 @@ namespace Routy
         
         public QueryCollector<TContext, TResult, TController, TP1, TP2, TP3> Query(
             ParameterCollectorFiller<TContext, TResult, TController> filler,
-            ActionFactory<TController, TP1, TP2, TP3, TResult> actionFactory)
+            HandlerFactory<TController, TP1, TP2, TP3, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
         public QueryCollector<TContext, TResult, TController, TP1, TP2, TP3> Query(
             ParameterCollectorFiller<TContext, TResult, TController> filler,
-            AsyncActionFactory<TController, TP1, TP2, TP3, TResult> actionFactory)
+            AsyncHandlerFactory<TController, TP1, TP2, TP3, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
 
         public QueryCollector<TContext, TResult, TController, TP1, TP2, TP3> Query<TQ1>(
             ParameterCollectorFiller<TContext, TQ1, TResult, TController> filler,
-            ActionFactory<TController, TP1, TP2, TP3, TQ1, TResult> actionFactory)
+            HandlerFactory<TController, TP1, TP2, TP3, TQ1, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
         public QueryCollector<TContext, TResult, TController, TP1, TP2, TP3> Query<TQ1>(
             ParameterCollectorFiller<TContext, TQ1, TResult, TController> filler,
-            AsyncActionFactory<TController, TP1, TP2, TP3, TQ1, TResult> actionFactory)
+            AsyncHandlerFactory<TController, TP1, TP2, TP3, TQ1, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
         public QueryCollector<TContext, TResult, TController, TP1, TP2, TP3> Query<TQ1, TQ2>(
             ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController> filler,
-            ActionFactory<TController, TP1, TP2, TP3, TQ1, TQ2, TResult> actionFactory)
+            HandlerFactory<TController, TP1, TP2, TP3, TQ1, TQ2, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         
         public QueryCollector<TContext, TResult, TController, TP1, TP2, TP3> Query<TQ1, TQ2>(
             ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController> filler,
-            AsyncActionFactory<TController, TP1, TP2, TP3, TQ1, TQ2, TResult> actionFactory)
+            AsyncHandlerFactory<TController, TP1, TP2, TP3, TQ1, TQ2, TResult> handlerFactory)
         {
-            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(actionFactory));
+            _handlers.Insert(0, filler(new ParameterCollector<TContext, TResult, TController>(_controllerFactory)).CreateHandler(handlerFactory));
             return this;
         }
         

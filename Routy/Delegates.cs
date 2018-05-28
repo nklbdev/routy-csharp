@@ -57,43 +57,43 @@ namespace Routy
 
     #region Actions
 
-    public delegate TResult Action<out TResult>();
-    public delegate TResult Action<in T1, out TResult>(T1 v1);
-    public delegate TResult Action<in T1, in T2, out TResult>(T1 v1, T2 v2);
-    public delegate TResult Action<in T1, in T2, in T3, out TResult>(T1 v1, T2 v2, T3 v3);
-    public delegate TResult Action<in T1, in T2, in T3, in T4, out TResult>(T1 v1, T2 v2, T3 v3, T4 v4);
-    public delegate TResult Action<in T1, in T2, in T3, in T4, in T5, out TResult>(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5);
-    public delegate TResult Action<in T1, in T2, in T3, in T4, in T5, in T6, out TResult>(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6);
+    public delegate TResult Handler<out TResult>();
+    public delegate TResult Handler<in T1, out TResult>(T1 v1);
+    public delegate TResult Handler<in T1, in T2, out TResult>(T1 v1, T2 v2);
+    public delegate TResult Handler<in T1, in T2, in T3, out TResult>(T1 v1, T2 v2, T3 v3);
+    public delegate TResult Handler<in T1, in T2, in T3, in T4, out TResult>(T1 v1, T2 v2, T3 v3, T4 v4);
+    public delegate TResult Handler<in T1, in T2, in T3, in T4, in T5, out TResult>(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5);
+    public delegate TResult Handler<in T1, in T2, in T3, in T4, in T5, in T6, out TResult>(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6);
     
-    public delegate Task<TResult> AsyncAction<TResult>();
-    public delegate Task<TResult> AsyncAction<in T1, TResult>(T1 v1);
-    public delegate Task<TResult> AsyncAction<in T1, in T2, TResult>(T1 v1, T2 v2);
-    public delegate Task<TResult> AsyncAction<in T1, in T2, in T3, TResult>(T1 v1, T2 v2, T3 v3);
-    public delegate Task<TResult> AsyncAction<in T1, in T2, in T3, in T4, TResult>(T1 v1, T2 v2, T3 v3, T4 v4);
-    public delegate Task<TResult> AsyncAction<in T1, in T2, in T3, in T4, in T5, TResult>(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5);
-    public delegate Task<TResult> AsyncAction<in T1, in T2, in T3, in T4, in T5, in T6, TResult>(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6);
-    public delegate Task<TResult> AsyncAction<in T1, in T2, in T3, in T4, in T5, in T6, in T7, in T8, in T9, in T10, in T11, in T12, in T13, in T14, in T15, in T16, in T17, in T18, in T19, in T20, in T21, TResult>(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9, T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17, T18 v18, T19 v19, T20 v20, T21 v21);
+    public delegate Task<TResult> AsyncHandler<TResult>();
+    public delegate Task<TResult> AsyncHandler<in T1, TResult>(T1 v1);
+    public delegate Task<TResult> AsyncHandler<in T1, in T2, TResult>(T1 v1, T2 v2);
+    public delegate Task<TResult> AsyncHandler<in T1, in T2, in T3, TResult>(T1 v1, T2 v2, T3 v3);
+    public delegate Task<TResult> AsyncHandler<in T1, in T2, in T3, in T4, TResult>(T1 v1, T2 v2, T3 v3, T4 v4);
+    public delegate Task<TResult> AsyncHandler<in T1, in T2, in T3, in T4, in T5, TResult>(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5);
+    public delegate Task<TResult> AsyncHandler<in T1, in T2, in T3, in T4, in T5, in T6, TResult>(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6);
+    public delegate Task<TResult> AsyncHandler<in T1, in T2, in T3, in T4, in T5, in T6, in T7, in T8, in T9, in T10, in T11, in T12, in T13, in T14, in T15, in T16, in T17, in T18, in T19, in T20, in T21, TResult>(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9, T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17, T18 v18, T19 v19, T20 v20, T21 v21);
 
     #endregion
     
-    #region Action factories
+    #region Handler factories
     
-    public delegate Action<TResult> ActionFactory<in TController, out TResult>(Factory<TController> controllerFactory);
-    public delegate Action<T1, TResult> ActionFactory<in TController, in T1, out TResult>(Factory<TController> controllerFactory);
-    public delegate Action<T1, T2, TResult> ActionFactory<in TController, in T1, in T2, out TResult>(Factory<TController> controllerFactory);
-    public delegate Action<T1, T2, T3, TResult> ActionFactory<in TController, in T1, in T2, in T3, out TResult>(Factory<TController> controllerFactory);
-    public delegate Action<T1, T2, T3, T4, TResult> ActionFactory<in TController, in T1, in T2, in T3, in T4, out TResult>(Factory<TController> controllerFactory);
-    public delegate Action<T1, T2, T3, T4, T5, TResult> ActionFactory<in TController, in T1, in T2, in T3, in T4, in T5, out TResult>(Factory<TController> controllerFactory);
-    public delegate Action<T1, T2, T3, T4, T5, T6, TResult> ActionFactory<in TController, in T1, in T2, in T3, in T4, in T5, in T6, out TResult>(Factory<TController> controllerFactory);
+    public delegate Handler<TResult> HandlerFactory<in TController, out TResult>(Factory<TController> controllerFactory);
+    public delegate Handler<T1, TResult> HandlerFactory<in TController, in T1, out TResult>(Factory<TController> controllerFactory);
+    public delegate Handler<T1, T2, TResult> HandlerFactory<in TController, in T1, in T2, out TResult>(Factory<TController> controllerFactory);
+    public delegate Handler<T1, T2, T3, TResult> HandlerFactory<in TController, in T1, in T2, in T3, out TResult>(Factory<TController> controllerFactory);
+    public delegate Handler<T1, T2, T3, T4, TResult> HandlerFactory<in TController, in T1, in T2, in T3, in T4, out TResult>(Factory<TController> controllerFactory);
+    public delegate Handler<T1, T2, T3, T4, T5, TResult> HandlerFactory<in TController, in T1, in T2, in T3, in T4, in T5, out TResult>(Factory<TController> controllerFactory);
+    public delegate Handler<T1, T2, T3, T4, T5, T6, TResult> HandlerFactory<in TController, in T1, in T2, in T3, in T4, in T5, in T6, out TResult>(Factory<TController> controllerFactory);
     
-    public delegate AsyncAction<TResult> AsyncActionFactory<in TController, TResult>(Factory<TController> controllerFactory);
-    public delegate AsyncAction<T1, TResult> AsyncActionFactory<in TController, in T1, TResult>(Factory<TController> controllerFactory);
-    public delegate AsyncAction<T1, T2, TResult> AsyncActionFactory<in TController, in T1, in T2, TResult>(Factory<TController> controllerFactory);
-    public delegate AsyncAction<T1, T2, T3, TResult> AsyncActionFactory<in TController, in T1, in T2, in T3, TResult>(Factory<TController> controllerFactory);
-    public delegate AsyncAction<T1, T2, T3, T4, TResult> AsyncActionFactory<in TController, in T1, in T2, in T3, in T4, TResult>(Factory<TController> controllerFactory);
-    public delegate AsyncAction<T1, T2, T3, T4, T5, TResult> AsyncActionFactory<in TController, in T1, in T2, in T3, in T4, in T5, TResult>(Factory<TController> controllerFactory);
-    public delegate AsyncAction<T1, T2, T3, T4, T5, T6, TResult> AsyncActionFactory<in TController, in T1, in T2, in T3, in T4, in T5, in T6, TResult>(Factory<TController> controllerFactory);
-    public delegate AsyncAction<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, TResult> AsyncActionFactory<in TController, in T1, in T2, in T3, in T4, in T5, in T6, in T7, in T8, in T9, in T10, in T11, in T12, in T13, in T14, in T15, in T16, in T17, in T18, in T19, in T20, in T21, TResult>(Factory<TController> controllerFactory);
+    public delegate AsyncHandler<TResult> AsyncHandlerFactory<in TController, TResult>(Factory<TController> controllerFactory);
+    public delegate AsyncHandler<T1, TResult> AsyncHandlerFactory<in TController, in T1, TResult>(Factory<TController> controllerFactory);
+    public delegate AsyncHandler<T1, T2, TResult> AsyncHandlerFactory<in TController, in T1, in T2, TResult>(Factory<TController> controllerFactory);
+    public delegate AsyncHandler<T1, T2, T3, TResult> AsyncHandlerFactory<in TController, in T1, in T2, in T3, TResult>(Factory<TController> controllerFactory);
+    public delegate AsyncHandler<T1, T2, T3, T4, TResult> AsyncHandlerFactory<in TController, in T1, in T2, in T3, in T4, TResult>(Factory<TController> controllerFactory);
+    public delegate AsyncHandler<T1, T2, T3, T4, T5, TResult> AsyncHandlerFactory<in TController, in T1, in T2, in T3, in T4, in T5, TResult>(Factory<TController> controllerFactory);
+    public delegate AsyncHandler<T1, T2, T3, T4, T5, T6, TResult> AsyncHandlerFactory<in TController, in T1, in T2, in T3, in T4, in T5, in T6, TResult>(Factory<TController> controllerFactory);
+    public delegate AsyncHandler<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, TResult> AsyncHandlerFactory<in TController, in T1, in T2, in T3, in T4, in T5, in T6, in T7, in T8, in T9, in T10, in T11, in T12, in T13, in T14, in T15, in T16, in T17, in T18, in T19, in T20, in T21, TResult>(Factory<TController> controllerFactory);
     
     #endregion
 }
