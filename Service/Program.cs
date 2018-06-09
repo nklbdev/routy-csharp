@@ -43,7 +43,7 @@ namespace Service
             var cts = new CancellationTokenSource();
             var c = CreateContainer();
 
-            var handler = Resource<HttpListenerRequest, Action<HttpListenerResponse>>
+            var handler = Resource<HttpListenerRequest, View>
                 .Root(c.Resolve<HomeController>,
                     methods => methods
                         .Method("get", h => h.Query(q => q, cf => cf().Index))

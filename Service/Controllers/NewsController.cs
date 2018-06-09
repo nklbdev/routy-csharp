@@ -1,37 +1,36 @@
 ﻿using System;
-using System.Net;
 using System.Text;
-using System.Threading.Tasks;
+using Service.Views;
 
 namespace Service.Controllers
 {
     internal class NewsController
     {
-        public Action<HttpListenerResponse> Index(int page, bool order) => r =>
+        public View Index(int page, bool order) => r =>
         {
             var bytes = Encoding.UTF8.GetBytes($"News int page: {page}, bool order: {order}");
             using(var s = r.OutputStream)
                 s.Write(bytes, 0, bytes.Length);
         };
         
-        public Action<HttpListenerResponse> Add(string title, string content)
+        public View Add(string title, string content)
         {
             throw new NotImplementedException("11");
         }
 
-        public Action<HttpListenerResponse> Get(int arg) => r =>
+        public View Get(int arg) => r =>
         {
             var bytes = Encoding.UTF8.GetBytes($"Concrete news page: {arg}");
             using (var s = r.OutputStream)
                 s.Write(bytes, 0, bytes.Length);
         };
 
-        public Func<HttpListenerResponse, Task> Change(int arg1, string arg2, string arg3)
+        public View Change(int arg1, string arg2, string arg3)
         {
             throw new NotImplementedException("13");
         }
 
-        public Func<HttpListenerResponse, Task> Delete(int arg)
+        public View Delete(int arg)
         {
             throw new NotImplementedException("14");
         }
