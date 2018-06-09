@@ -48,7 +48,7 @@
     <Compile Include="ValueExtractors.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryCollector.cs" />
-    <Compile Include="Resource.cs" />
+    <Compile Include="RequestHandlerFactory.cs" />
     <Compile Include="ResourceCollector.cs" />
     <Compile Include="ValuedResource.cs" />
   </ItemGroup>

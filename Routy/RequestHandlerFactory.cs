@@ -3,9 +3,9 @@ using System.Web;
 
 namespace Routy
 {
-    public static class Resource<TContext, TResult>
+    public static class RequestHandlerFactory<TContext, TResult>
     {
-        public static MainHandler<TContext, TResult> Root<TController>(
+        public static RequestHandler<TContext, TResult> Create<TController>(
             Factory<TController> controllerFactory,
             Mutator<HttpMethodCollector<TContext, TResult, TController>> httpMethodCollectorFiller = null,
             Mutator<ResourceCollector<TContext, TResult, TController>> nestedResourceCollectorFiller = null

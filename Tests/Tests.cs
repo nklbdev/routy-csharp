@@ -59,7 +59,7 @@ namespace Tests
         {
             void ExpectedResponder(int response) { }
 
-            var handler = Resource<int, Action<int>>.Root(
+            var handler = RequestHandlerFactory<int, Action<int>>.Create(
                 () => new Ctrlr(ExpectedResponder),
                 m => m
                     .Method("get", q => q
@@ -80,7 +80,7 @@ namespace Tests
         {
             void ExpectedResponder(int response) { }
 
-            var handler = Resource<int, Action<int>>.Root(() => new Ctrlr(ExpectedResponder),
+            var handler = RequestHandlerFactory<int, Action<int>>.Create(() => new Ctrlr(ExpectedResponder),
                 m => m.Method("get", q => q.Query(p => p.Single("a", int.Parse), cf => cf().Method)), n => n);
 
             var uri = new Uri("http://localhost?a=192");
@@ -154,7 +154,7 @@ namespace Tests
         {
             void ExpectedResponder(int response) { }
 
-            var handler = Resource<Stream, bool>.Root(() => new Ctrlr(ExpectedResponder),
+            var handler = RequestHandlerFactory<Stream, bool>.Create(() => new Ctrlr(ExpectedResponder),
                 m => m.Method("get", q => q
                     .Query(p => p
                             .Context(JsonDeserialize<SomeEntity>),
@@ -176,7 +176,7 @@ namespace Tests
         {
             void ExpectedResponder(int response) { }
 
-            var handler = Resource<Stream, bool>.Root(() => new Ctrlr(ExpectedResponder),
+            var handler = RequestHandlerFactory<Stream, bool>.Create(() => new Ctrlr(ExpectedResponder),
                 m => m.Method("get", q => q
                     .Query(p => p
                             .Context(FormUrlencodedDeserialize<SomeEntity>),
@@ -188,10 +188,5 @@ namespace Tests
             var result = handler("get", uri, stream, _cts.Token).Result;
             Assert.IsTrue(result);
         }
-        
-//        [Test]
-//        public void TestHandleMultipart()
-//        {
-//        }
     }
 }

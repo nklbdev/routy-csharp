@@ -43,8 +43,8 @@ namespace Service
             var cts = new CancellationTokenSource();
             var c = CreateContainer();
 
-            var handler = Resource<HttpListenerRequest, View>
-                .Root(c.Resolve<HomeController>,
+            var handler = RequestHandlerFactory<HttpListenerRequest, View>
+                .Create(c.Resolve<HomeController>,
                     methods => methods
                         .Method("get", h => h.Query(q => q, cf => cf().Index))
                         .Method("post",
@@ -66,6 +66,7 @@ namespace Service
                                     methods => methods
                                         .Method("get", h => h
                                             .Query(q => q, cf => cf().Get)))));
+
             new Server(handler)
                 .RunAsync(cts.Token).Wait();
         }

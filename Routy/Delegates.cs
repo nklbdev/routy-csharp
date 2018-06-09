@@ -6,27 +6,26 @@ using System.Threading.Tasks;
 
 namespace Routy
 {
-    // Factory
+    // RequestHandler
+    public delegate Task<TResult> RequestHandler<in TContext, TResult>(string httpMethod, Uri uri, TContext context, CancellationToken ct);
+
+    // Functional factory
     public delegate T Factory<out T>();
     
-    // Transformer
+    // Functional transformer
     public delegate TOut Transformer<in TIn, out TOut>(TIn input);
     
-    // MainHandler
-    public delegate Task<TResult> MainHandler<in TContext, TResult>(string httpMethod, Uri uri, TContext context, CancellationToken ct);
-    
-    // Parser
+    // Functional parser
     public delegate TValue Parser<out TValue>(string str);
     
-    // ValueExtractor
+    // Functional value extractor
     public delegate T ValueExtractor<in TContext, out T>(TContext context, NameValueCollection parameters, CancellationToken ct);
 
-    // Mutator
+    // Functional mutator
     public delegate T Mutator<T>(T t);
 
-    #region Handlers
+    #region Parameter collector fillers
     
-    // ParameterCollectorFiller
     public delegate ParameterCollector<TContext, TResult, TController> ParameterCollectorFiller<TContext, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
     public delegate ParameterCollector<TContext, TQ1, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
     public delegate ParameterCollector<TContext, TQ1, TQ2, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
@@ -34,19 +33,16 @@ namespace Routy
     
     #endregion
 
-    #region Handlers
+    #region Middle handlers
     
-    // ResourceCollectorHandle
     public delegate Task<TResult> ResourceCollectorHandler<in TContext, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, CancellationToken ct);
     public delegate Task<TResult> ResourceCollectorHandler<in TContext, TResult, in TP1>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 p1, CancellationToken ct);
     public delegate Task<TResult> ResourceCollectorHandler<in TContext, TResult, in TP1, in TP2>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 p1, TP2 tp2, CancellationToken ct);
     
-    // HttpMethodCollectorHandle
     public delegate Task<TResult> HttpMethodCollectorHandler<in TContext, TResult>(string httpMethod, NameValueCollection query, TContext context, CancellationToken ct);
     public delegate Task<TResult> HttpMethodCollectorHandler<in TContext, TResult, in TP1>(string httpMethod, NameValueCollection query, TContext context, TP1 p1, CancellationToken ct);
     public delegate Task<TResult> HttpMethodCollectorHandler<in TContext, TResult, in TP1, in TP2>(string httpMethod, NameValueCollection query, TContext context, TP1 p1, TP2 p2, CancellationToken ct);
     
-    // ParameterCollectorHandle
     public delegate Task<TResult> ParameterCollectorHandler<in TContext, TResult>(NameValueCollection query, TContext context, CancellationToken ct);
     public delegate Task<TResult> ParameterCollectorHandler<in TContext, TResult, in TP1>(NameValueCollection query, TContext context, TP1 p1, CancellationToken ct);
     public delegate Task<TResult> ParameterCollectorHandler<in TContext, TResult, in TP1, in TP2>(NameValueCollection query, TContext context, TP1 p1, TP2 p2, CancellationToken ct);
@@ -55,7 +51,7 @@ namespace Routy
 
     #endregion
 
-    #region Actions
+    #region Endpoint handlers
 
     public delegate TResult Handler<out TResult>();
     public delegate TResult Handler<in T1, out TResult>(T1 v1);
@@ -76,7 +72,7 @@ namespace Routy
 
     #endregion
     
-    #region Handler factories
+    #region Endpoint handler factories
     
     public delegate Handler<TResult> HandlerFactory<in TController, out TResult>(Factory<TController> controllerFactory);
     public delegate Handler<T1, TResult> HandlerFactory<in TController, in T1, out TResult>(Factory<TController> controllerFactory);
