@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Service.Views;
 
@@ -6,9 +7,9 @@ namespace Service.Controllers
 {
     internal class NewsController
     {
-        public View Index(int page, bool order) => r =>
+        public View Index(int page, IEnumerable<bool> order, int parsed) => r =>
         {
-            var bytes = Encoding.UTF8.GetBytes($"News int page: {page}, bool order: {order}");
+            var bytes = Encoding.UTF8.GetBytes($"News int page: {page}, bool order: [{string.Join(", ", order)}], parsed: {parsed}");
             using(var s = r.OutputStream)
                 s.Write(bytes, 0, bytes.Length);
         };

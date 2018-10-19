@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
@@ -18,8 +17,11 @@ namespace Routy
             return str == null ? def : parser(str);
         };
 
-        public static ValueExtractor<TContext, IEnumerable<T>> Array<TContext, T>(string name, Parser<T> parser) => (context, parameters, ct) =>
-            (parameters.GetValues(name) ?? Enumerable.Empty<string>()).Select(x => parser(x));
+        public static ValueExtractor<TContext, T[]> Multiple<TContext, T>(string name, Parser<T> parser) => (context, parameters, ct) =>
+            (parameters.GetValues(name) ?? Enumerable.Empty<string>()).Select(x => parser(x)).ToArray();
+
+        public static ValueExtractor<TContext, T> Object<TContext, T>(NameValueCollectionParser<T> parser) => (context, parameters, ct) =>
+            parser(parameters);
         
         public static ValueExtractor<TContext, CancellationToken> CancellationToken<TContext>() => (context, parameters, ct) => ct;
     }

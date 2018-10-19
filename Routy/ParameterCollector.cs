@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,8 +27,11 @@ namespace Routy
         public ParameterCollector<TContext, T, TResult, TController> Single<T>(string name, Parser<T> parser, T def) =>
             CreateNext(ValueExtractors.Single<TContext, T>(name, parser, def));
 
-        public ParameterCollector<TContext, IEnumerable<T>, TResult, TController> Array<T>(string name, Parser<T> parser) =>
-            CreateNext(ValueExtractors.Array<TContext, T>(name, parser));
+        public ParameterCollector<TContext, T[], TResult, TController> Multiple<T>(string name, Parser<T> parser) =>
+            CreateNext(ValueExtractors.Multiple<TContext, T>(name, parser));
+
+        public ParameterCollector<TContext, T, TResult, TController> Object<T>(NameValueCollectionParser<T> parser) =>
+            CreateNext(ValueExtractors.Object<TContext, T>(parser));
 
         public ParameterCollectorHandler<TContext, TResult> CreateHandler(HandlerProvider<TController, TResult> handlerProvider) =>
             (query, context, ct) => Task.FromResult(handlerProvider(_controllerProvider)());
@@ -82,8 +84,11 @@ namespace Routy
         public ParameterCollector<TContext, TQ1, T, TResult, TController> Single<T>(string name, Parser<T> parser, T def) =>
             CreateNext(ValueExtractors.Single<TContext, T>(name, parser, def));
         
-        public ParameterCollector<TContext, TQ1, IEnumerable<T>, TResult, TController> Array<T>(string name, Parser<T> parser) =>
-            CreateNext(ValueExtractors.Array<TContext, T>(name, parser));
+        public ParameterCollector<TContext, TQ1, T[], TResult, TController> Multiple<T>(string name, Parser<T> parser) =>
+            CreateNext(ValueExtractors.Multiple<TContext, T>(name, parser));
+
+        public ParameterCollector<TContext, TQ1, T, TResult, TController> Object<T>(NameValueCollectionParser<T> parser) =>
+            CreateNext(ValueExtractors.Object<TContext, T>(parser));
         
         public ParameterCollectorHandler<TContext, TResult> CreateHandler(HandlerProvider<TController, TQ1, TResult> handlerProvider) =>
             (query, context, ct) => Task.FromResult(handlerProvider(_controllerProvider)(Q1(context, query, ct)));
@@ -142,8 +147,11 @@ namespace Routy
         public ParameterCollector<TContext, TQ1, TQ2, T, TResult, TController> Single<T>(string name, Parser<T> parser, T def) =>
             CreateNext(ValueExtractors.Single<TContext, T>(name, parser, def));
         
-        public ParameterCollector<TContext, TQ1, TQ2, IEnumerable<T>, TResult, TController> Array<T>(string name, Parser<T> parser) =>
-            CreateNext(ValueExtractors.Array<TContext, T>(name, parser));
+        public ParameterCollector<TContext, TQ1, TQ2, T[], TResult, TController> Multiple<T>(string name, Parser<T> parser) =>
+            CreateNext(ValueExtractors.Multiple<TContext, T>(name, parser));
+
+        public ParameterCollector<TContext, TQ1, TQ2, T, TResult, TController> Object<T>(NameValueCollectionParser<T> parser) =>
+            CreateNext(ValueExtractors.Object<TContext, T>(parser));
         
         public ParameterCollectorHandler<TContext, TResult> CreateHandler(HandlerProvider<TController, TQ1, TQ2, TResult> handlerProvider) =>
             (query, context, ct) => Task.FromResult(handlerProvider(_controllerProvider)(Q1(context, query, ct), Q2(context, query, ct)));
@@ -183,23 +191,26 @@ namespace Routy
         public ValueExtractor<TContext, TQ2> Q2 { get; set; }
         public ValueExtractor<TContext, TQ3> Q3 { get; set; }
         
-//        private ParameterCollector<TContext, TQ1, TQ2, TQ3, T, TResult, TController> CreateNext<T>(ValueExtractor<TContext, T> valueExtractor) =>
-//            new ParameterCollector<TContext, TQ1, TQ2, TQ3, T, TResult, TController>(_controllerProvider) { Q1 = Q1, Q2 = Q2, Q3 = Q3, Q4 = valueExtractor};
-//        
-//        public ParameterCollector<TContext, TQ1, TQ2, TQ3, T, TResult, TController> Context<T>(Transformer<TContext, T> f, uint priority = 0) =>
-//            CreateNext(ParValExtBldr.CreateContext(f));
-//        
-//        public ParameterCollector<TContext, TQ1, TQ2, TQ3, CancellationToken, TResult, TController> CancellationToken() =>
-//            CreateNext(ParValExtBldr.CreateCancellationToken<TContext>());
-//        
-//        public ParameterCollector<TContext, TQ1, TQ2, TQ3, T, TResult, TController> Single<T>(string name, Parser<T> parser) =>
-//            CreateNext(ParValExtBldr.CreateSingle<TContext, T>(name, parser));
-//        
-//        public ParameterCollector<TContext, TQ1, TQ2, TQ3, T, TResult, TController> Single<T>(string name, Parser<T> parser, T def) =>
-//            CreateNext(ParValExtBldr.CreateSingle<TContext, T>(name, parser, def));
-//        
-//        public ParameterCollector<TContext, TQ1, TQ2, TQ3, IEnumerable<T>, TResult, TController> Array<T>(string name, Parser<T> parser) =>
-//            CreateNext(ParValExtBldr.CreateArray<TContext, T>(name, parser));
+        //private ParameterCollector<TContext, TQ1, TQ2, TQ3, T, TResult, TController> CreateNext<T>(ValueExtractor<TContext, T> valueExtractor) =>
+        //    new ParameterCollector<TContext, TQ1, TQ2, TQ3, T, TResult, TController>(_controllerProvider) { Q1 = Q1, Q2 = Q2, Q3 = Q3, Q4 = valueExtractor};
+        
+        //public ParameterCollector<TContext, TQ1, TQ2, TQ3, T, TResult, TController> Context<T>(Transformer<TContext, T> f, uint priority = 0) =>
+        //    CreateNext(ValueExtractors.Context(f));
+        
+        //public ParameterCollector<TContext, TQ1, TQ2, TQ3, CancellationToken, TResult, TController> CancellationToken() =>
+        //    CreateNext(ValueExtractors.CancellationToken<TContext>());
+        
+        //public ParameterCollector<TContext, TQ1, TQ2, TQ3, T, TResult, TController> Single<T>(string name, Parser<T> parser) =>
+        //    CreateNext(ValueExtractors.Single<TContext, T>(name, parser));
+        
+        //public ParameterCollector<TContext, TQ1, TQ2, TQ3, T, TResult, TController> Single<T>(string name, Parser<T> parser, T def) =>
+        //    CreateNext(ValueExtractors.Single<TContext, T>(name, parser, def));
+        
+        //public ParameterCollector<TContext, TQ1, TQ2, TQ3, T[], TResult, TController> Multiple<T>(string name, Parser<T> parser) =>
+        //    CreateNext(ValueExtractors.Multiple<TContext, T>(name, parser));
+
+        //public ParameterCollector<TContext, TQ1, TQ2, TQ3, T, TResult, TController> Object<T>(NameValueCollectionParser<T> parser) =>
+        //    CreateNext(ValueExtractors.Object<TContext, T>(parser));
         
         public ParameterCollectorHandler<TContext, TResult> CreateHandler(HandlerProvider<TController, TQ1, TQ2, TQ3, TResult> handlerProvider) =>
             (query, context, ct) => Task.FromResult(handlerProvider(_controllerProvider)(Q1(context, query, ct), Q2(context, query, ct), Q3(context, query, ct)));

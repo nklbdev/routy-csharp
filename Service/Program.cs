@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Net;
 using System.Threading;
 using Autofac;
@@ -8,6 +9,8 @@ using Service.Controllers;
 using Service.Forms;
 using Service.Views;
 using Routy;
+
+using MN = Service.HttpMethodNames;
 
 namespace Service
 {
@@ -38,6 +41,11 @@ namespace Service
             return cb.Build();
         }
 
+        private static int ParseInt(NameValueCollection nvc)
+        {
+            return 3;
+        }
+
         public static void Main(string[] args)
         {
             var cts = new CancellationTokenSource();
@@ -46,29 +54,36 @@ namespace Service
             var handler = RequestHandlerFactory<HttpListenerRequest, View>
                 .Create(c.Resolve<HomeController>,
                     methods => methods
-                        .Method("get", queries => queries.Query(parameters => parameters, cf => cf().Index))
-                        .Method("post",
+                        .Method(MN.Get, queries => queries.Query(parameters => parameters, cf => cf().Index))
+                        .Method(MN.Post,
                             queries => queries.Query(parameters => parameters.Context(ct => Deserialization.DeserializeFormUrlencoded<SimpleForm>(ct.InputStream)),
                                 cp => cp().PostAnswer)),
                     rootResources => rootResources
                         .Named("about", methods => methods
-                            .Method("get", queries => queries
+                            .Method(MN.Get, queries => queries
                                 .Query(parameters => parameters, cp => () => c.ResolveKeyed<ViewProvider>("About")().Invoke)))
                         .Named("news", c.Resolve<NewsController>,
                             methods => methods
-                                .Method("get", queries => queries
+                                .Method(MN.Get, queries => queries
                                     .Query(parameters => parameters
                                             .Single("page", int.Parse, 0)
-                                            .Single("order", bool.Parse, false),
+                                            .Multiple("order", bool.Parse)
+                                            .Object(ParseInt),
                                         cp => cp().Index)),
                             newsResources => newsResources
                                 .Valued(int.Parse,
                                     methods => methods
-                                        .Method("get", queries => queries
+                                        .Method(MN.Get, queries => queries
                                             .Query(parameters => parameters, cp => cp().Get)))));
 
             new Server(handler)
                 .RunAsync(cts.Token).Wait();
         }
+    }
+
+    public static class HttpMethodNames
+    {
+        public const string Get = "get";
+        public const string Post = "post";
     }
 }

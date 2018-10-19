@@ -17,6 +17,7 @@ namespace Routy
     
     // Functional parser
     public delegate TValue Parser<out TValue>(string str);
+    public delegate TValue NameValueCollectionParser<out TValue>(NameValueCollection source);
     
     // Functional value extractor
     public delegate T ValueExtractor<in TContext, out T>(TContext context, NameValueCollection parameters, CancellationToken ct);
