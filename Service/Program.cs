@@ -46,26 +46,26 @@ namespace Service
             var handler = RequestHandlerFactory<HttpListenerRequest, View>
                 .Create(c.Resolve<HomeController>,
                     methods => methods
-                        .Method("get", h => h.Query(q => q, cf => cf().Index))
+                        .Method("get", queries => queries.Query(parameters => parameters, cf => cf().Index))
                         .Method("post",
-                            h => h.Query(q => q.Context(ct => Deserialization.DeserializeFormUrlencoded<SimpleForm>(ct.InputStream)),
-                                cf => cf().PostAnswer)),
-                    root => root
+                            queries => queries.Query(parameters => parameters.Context(ct => Deserialization.DeserializeFormUrlencoded<SimpleForm>(ct.InputStream)),
+                                cp => cp().PostAnswer)),
+                    rootResources => rootResources
                         .Named("about", methods => methods
-                            .Method("get", h => h
-                                .Query(q => q, cf => () => c.ResolveKeyed<ViewProvider>("About")().Invoke)))
+                            .Method("get", queries => queries
+                                .Query(parameters => parameters, cp => () => c.ResolveKeyed<ViewProvider>("About")().Invoke)))
                         .Named("news", c.Resolve<NewsController>,
                             methods => methods
-                                .Method("get", h => h
-                                    .Query(q => q
+                                .Method("get", queries => queries
+                                    .Query(parameters => parameters
                                             .Single("page", int.Parse, 0)
                                             .Single("order", bool.Parse, false),
-                                        cf => cf().Index)),
-                            news => news
+                                        cp => cp().Index)),
+                            newsResources => newsResources
                                 .Valued(int.Parse,
                                     methods => methods
-                                        .Method("get", h => h
-                                            .Query(q => q, cf => cf().Get)))));
+                                        .Method("get", queries => queries
+                                            .Query(parameters => parameters, cp => cp().Get)))));
 
             new Server(handler)
                 .RunAsync(cts.Token).Wait();
