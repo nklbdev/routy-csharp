@@ -9,8 +9,8 @@ namespace Routy
     // RequestHandler
     public delegate Task<TResult> RequestHandler<in TContext, TResult>(string httpMethod, Uri uri, TContext context, CancellationToken ct);
 
-    // Functional factory
-    public delegate T Factory<out T>();
+    // Functional provider
+    public delegate T Provider<out T>();
     
     // Functional transformer
     public delegate TOut Transformer<in TIn, out TOut>(TIn input);
@@ -74,22 +74,22 @@ namespace Routy
     
     #region Endpoint handler factories
     
-    public delegate Handler<TResult> HandlerFactory<in TController, out TResult>(Factory<TController> controllerFactory);
-    public delegate Handler<T1, TResult> HandlerFactory<in TController, in T1, out TResult>(Factory<TController> controllerFactory);
-    public delegate Handler<T1, T2, TResult> HandlerFactory<in TController, in T1, in T2, out TResult>(Factory<TController> controllerFactory);
-    public delegate Handler<T1, T2, T3, TResult> HandlerFactory<in TController, in T1, in T2, in T3, out TResult>(Factory<TController> controllerFactory);
-    public delegate Handler<T1, T2, T3, T4, TResult> HandlerFactory<in TController, in T1, in T2, in T3, in T4, out TResult>(Factory<TController> controllerFactory);
-    public delegate Handler<T1, T2, T3, T4, T5, TResult> HandlerFactory<in TController, in T1, in T2, in T3, in T4, in T5, out TResult>(Factory<TController> controllerFactory);
-    public delegate Handler<T1, T2, T3, T4, T5, T6, TResult> HandlerFactory<in TController, in T1, in T2, in T3, in T4, in T5, in T6, out TResult>(Factory<TController> controllerFactory);
+    public delegate Handler<TResult> HandlerProvider<in TController, out TResult>(Provider<TController> controllerProvider);
+    public delegate Handler<T1, TResult> HandlerProvider<in TController, in T1, out TResult>(Provider<TController> controllerProvider);
+    public delegate Handler<T1, T2, TResult> HandlerProvider<in TController, in T1, in T2, out TResult>(Provider<TController> controllerProvider);
+    public delegate Handler<T1, T2, T3, TResult> HandlerProvider<in TController, in T1, in T2, in T3, out TResult>(Provider<TController> controllerProvider);
+    public delegate Handler<T1, T2, T3, T4, TResult> HandlerProvider<in TController, in T1, in T2, in T3, in T4, out TResult>(Provider<TController> controllerProvider);
+    public delegate Handler<T1, T2, T3, T4, T5, TResult> HandlerProvider<in TController, in T1, in T2, in T3, in T4, in T5, out TResult>(Provider<TController> controllerProvider);
+    public delegate Handler<T1, T2, T3, T4, T5, T6, TResult> HandlerProvider<in TController, in T1, in T2, in T3, in T4, in T5, in T6, out TResult>(Provider<TController> controllerProvider);
     
-    public delegate AsyncHandler<TResult> AsyncHandlerFactory<in TController, TResult>(Factory<TController> controllerFactory);
-    public delegate AsyncHandler<T1, TResult> AsyncHandlerFactory<in TController, in T1, TResult>(Factory<TController> controllerFactory);
-    public delegate AsyncHandler<T1, T2, TResult> AsyncHandlerFactory<in TController, in T1, in T2, TResult>(Factory<TController> controllerFactory);
-    public delegate AsyncHandler<T1, T2, T3, TResult> AsyncHandlerFactory<in TController, in T1, in T2, in T3, TResult>(Factory<TController> controllerFactory);
-    public delegate AsyncHandler<T1, T2, T3, T4, TResult> AsyncHandlerFactory<in TController, in T1, in T2, in T3, in T4, TResult>(Factory<TController> controllerFactory);
-    public delegate AsyncHandler<T1, T2, T3, T4, T5, TResult> AsyncHandlerFactory<in TController, in T1, in T2, in T3, in T4, in T5, TResult>(Factory<TController> controllerFactory);
-    public delegate AsyncHandler<T1, T2, T3, T4, T5, T6, TResult> AsyncHandlerFactory<in TController, in T1, in T2, in T3, in T4, in T5, in T6, TResult>(Factory<TController> controllerFactory);
-    public delegate AsyncHandler<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, TResult> AsyncHandlerFactory<in TController, in T1, in T2, in T3, in T4, in T5, in T6, in T7, in T8, in T9, in T10, in T11, in T12, in T13, in T14, in T15, in T16, in T17, in T18, in T19, in T20, in T21, TResult>(Factory<TController> controllerFactory);
+    public delegate AsyncHandler<TResult> AsyncHandlerProvider<in TController, TResult>(Provider<TController> controllerProvider);
+    public delegate AsyncHandler<T1, TResult> AsyncHandlerProvider<in TController, in T1, TResult>(Provider<TController> controllerProvider);
+    public delegate AsyncHandler<T1, T2, TResult> AsyncHandlerProvider<in TController, in T1, in T2, TResult>(Provider<TController> controllerProvider);
+    public delegate AsyncHandler<T1, T2, T3, TResult> AsyncHandlerProvider<in TController, in T1, in T2, in T3, TResult>(Provider<TController> controllerProvider);
+    public delegate AsyncHandler<T1, T2, T3, T4, TResult> AsyncHandlerProvider<in TController, in T1, in T2, in T3, in T4, TResult>(Provider<TController> controllerProvider);
+    public delegate AsyncHandler<T1, T2, T3, T4, T5, TResult> AsyncHandlerProvider<in TController, in T1, in T2, in T3, in T4, in T5, TResult>(Provider<TController> controllerProvider);
+    public delegate AsyncHandler<T1, T2, T3, T4, T5, T6, TResult> AsyncHandlerProvider<in TController, in T1, in T2, in T3, in T4, in T5, in T6, TResult>(Provider<TController> controllerProvider);
+    public delegate AsyncHandler<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, TResult> AsyncHandlerProvider<in TController, in T1, in T2, in T3, in T4, in T5, in T6, in T7, in T8, in T9, in T10, in T11, in T12, in T13, in T14, in T15, in T16, in T17, in T18, in T19, in T20, in T21, TResult>(Provider<TController> controllerProvider);
     
     #endregion
 }

@@ -9,22 +9,22 @@ namespace Routy
 {
     public class ResourceCollector<TContext, TResult, TController>
     {
-        private readonly Factory<TController> _controllerFactory;
+        private readonly Provider<TController> _controllerProvider;
         private readonly Dictionary<string, ResourceCollectorHandler<TContext, TResult>> _namedResourceHandlers = new Dictionary<string, ResourceCollectorHandler<TContext, TResult>>();
         private readonly List<ResourceCollectorHandler<TContext, TResult>> _valuedResourceHandlers = new List<ResourceCollectorHandler<TContext, TResult>>();
 
-        public ResourceCollector(Factory<TController> controllerFactory)
+        public ResourceCollector(Provider<TController> controllerProvider)
         {
-            _controllerFactory = controllerFactory;
+            _controllerProvider = controllerProvider;
         }
 
         public ResourceCollector<TContext, TResult, TController> Named(string name,
             Mutator<HttpMethodCollector<TContext, TResult, TController>> httpMethodCollectorFiller = null,
             Mutator<ResourceCollector<TContext, TResult, TController>> nestedResourceCollectorFiller = null
-            ) => Named(name, _controllerFactory, httpMethodCollectorFiller, nestedResourceCollectorFiller);
+            ) => Named(name, _controllerProvider, httpMethodCollectorFiller, nestedResourceCollectorFiller);
         
         public ResourceCollector<TContext, TResult, TController> Named<TNewController>(string name,
-            Factory<TNewController> controllerFactory,
+            Provider<TNewController> controllerProvider,
             Mutator<HttpMethodCollector<TContext, TResult, TNewController>> httpMethodCollectorFiller = null,
             Mutator<ResourceCollector<TContext, TResult, TNewController>> nestedResourceCollectorFiller = null
             )
@@ -32,18 +32,18 @@ namespace Routy
             if (httpMethodCollectorFiller == null) httpMethodCollectorFiller = x => x;
             if (nestedResourceCollectorFiller == null) nestedResourceCollectorFiller = x => x;
             _namedResourceHandlers[name] = new NamedResource<TContext, TResult>(
-                httpMethodCollectorFiller(new HttpMethodCollector<TContext, TResult, TNewController>(controllerFactory)).Handle,
-                nestedResourceCollectorFiller(new ResourceCollector<TContext, TResult, TNewController>(controllerFactory)).Handle).Handle;
+                httpMethodCollectorFiller(new HttpMethodCollector<TContext, TResult, TNewController>(controllerProvider)).Handle,
+                nestedResourceCollectorFiller(new ResourceCollector<TContext, TResult, TNewController>(controllerProvider)).Handle).Handle;
             return this;
         }
         
         public ResourceCollector<TContext, TResult, TController> Valued<TValue>(Parser<TValue> parser,
             Mutator<HttpMethodCollector<TContext, TResult, TController, TValue>> httpMethodCollectorFiller = null,
             Mutator<ResourceCollector<TContext, TResult, TController, TValue>> nestedResourceCollectorFiller = null
-            ) => Valued(parser, _controllerFactory, httpMethodCollectorFiller, nestedResourceCollectorFiller);
+            ) => Valued(parser, _controllerProvider, httpMethodCollectorFiller, nestedResourceCollectorFiller);
 
         public ResourceCollector<TContext, TResult, TController> Valued<TValue, TNewController>(Parser<TValue> parser,
-            Factory<TNewController> controllerFactory,
+            Provider<TNewController> controllerProvider,
             Mutator<HttpMethodCollector<TContext, TResult, TNewController, TValue>> httpMethodCollectorFiller = null,
             Mutator<ResourceCollector<TContext, TResult, TNewController, TValue>> nestedResourceCollectorFiller = null
             )
@@ -52,8 +52,8 @@ namespace Routy
             if (nestedResourceCollectorFiller == null) nestedResourceCollectorFiller = x => x;
             _valuedResourceHandlers.Add(new ValuedResource<TContext, TResult, TValue>(
                 parser,
-                httpMethodCollectorFiller(new HttpMethodCollector<TContext, TResult, TNewController, TValue>(controllerFactory)).Handle,
-                nestedResourceCollectorFiller(new ResourceCollector<TContext, TResult, TNewController, TValue>(controllerFactory)).Handle).Handle);
+                httpMethodCollectorFiller(new HttpMethodCollector<TContext, TResult, TNewController, TValue>(controllerProvider)).Handle,
+                nestedResourceCollectorFiller(new ResourceCollector<TContext, TResult, TNewController, TValue>(controllerProvider)).Handle).Handle);
             return this;
         }
         
@@ -84,13 +84,13 @@ namespace Routy
 
     public class ResourceCollector<TContext, TResult, TController, TP1>
     {
-        private readonly Factory<TController> _controllerFactory;
+        private readonly Provider<TController> _controllerProvider;
         private readonly Dictionary<string, ResourceCollectorHandler<TContext, TResult, TP1>> _namedResourceHandlers = new Dictionary<string, ResourceCollectorHandler<TContext, TResult, TP1>>();
         private readonly List<ResourceCollectorHandler<TContext, TResult, TP1>> _valuedResourceHandlers = new List<ResourceCollectorHandler<TContext, TResult, TP1>>();
 
-        public ResourceCollector(Factory<TController> controllerFactory)
+        public ResourceCollector(Provider<TController> controllerProvider)
         {
-            _controllerFactory = controllerFactory;
+            _controllerProvider = controllerProvider;
         }
         
         public async Task<TResult> Handle(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 p1, CancellationToken ct)
@@ -120,13 +120,13 @@ namespace Routy
     
     public class ResourceCollector<TContext, TResult, TController, TP1, TP2>
     {
-        private readonly Factory<TController> _controllerFactory;
+        private readonly Provider<TController> _controllerProvider;
         private readonly Dictionary<string, ResourceCollectorHandler<TContext, TResult, TP1, TP2>> _namedResourceHandlers = new Dictionary<string, ResourceCollectorHandler<TContext, TResult, TP1, TP2>>();
         private readonly List<ResourceCollectorHandler<TContext, TResult, TP1, TP2>> _valuedResourceHandlers = new List<ResourceCollectorHandler<TContext, TResult, TP1, TP2>>();
 
-        public ResourceCollector(Factory<TController> controllerFactory)
+        public ResourceCollector(Provider<TController> controllerProvider)
         {
-            _controllerFactory = controllerFactory;
+            _controllerProvider = controllerProvider;
         }
         
         public async Task<TResult> Handle(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 p1, TP2 p2, CancellationToken ct)

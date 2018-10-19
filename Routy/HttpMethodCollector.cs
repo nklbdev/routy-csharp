@@ -8,12 +8,12 @@ namespace Routy
 {
     public class HttpMethodCollector<TContext, TResult, TController>
     {
-        private readonly Factory<TController> _controllerFactory;
+        private readonly Provider<TController> _controllerProvider;
         private readonly Dictionary<string, QueryCollector<TContext, TResult, TController>> _queryCollectors = new Dictionary<string, QueryCollector<TContext, TResult, TController>>();
 
-        public HttpMethodCollector(Factory<TController> controllerFactory)
+        public HttpMethodCollector(Provider<TController> controllerProvider)
         {
-            _controllerFactory = controllerFactory;
+            _controllerProvider = controllerProvider;
         }
 
         public HttpMethodCollector<TContext, TResult, TController> Method(
@@ -21,7 +21,7 @@ namespace Routy
             Mutator<QueryCollector<TContext, TResult, TController>> filler
             )
         {
-            _queryCollectors[method] = filler(new QueryCollector<TContext, TResult, TController>(_controllerFactory));
+            _queryCollectors[method] = filler(new QueryCollector<TContext, TResult, TController>(_controllerProvider));
             return this;
         }
 
@@ -36,19 +36,19 @@ namespace Routy
     
     public class HttpMethodCollector<TContext, TResult, TController, TP1>
     {
-        private readonly Factory<TController> _controllerFactory;
+        private readonly Provider<TController> _controllerProvider;
         private readonly Dictionary<string, QueryCollector<TContext, TResult, TController, TP1>> _queryCollectors = new Dictionary<string, QueryCollector<TContext, TResult, TController, TP1>>();
 
-        public HttpMethodCollector(Factory<TController> controllerFactory)
+        public HttpMethodCollector(Provider<TController> controllerProvider)
         {
-            _controllerFactory = controllerFactory;
+            _controllerProvider = controllerProvider;
         }
         
         public HttpMethodCollector<TContext, TResult, TController, TP1> Method(
             string method,
             Mutator<QueryCollector<TContext, TResult, TController, TP1>> filler)
         {
-            _queryCollectors[method] = filler(new QueryCollector<TContext, TResult, TController, TP1>(_controllerFactory));
+            _queryCollectors[method] = filler(new QueryCollector<TContext, TResult, TController, TP1>(_controllerProvider));
             return this;
         }
         
@@ -63,19 +63,19 @@ namespace Routy
     
     public class HttpMethodCollector<TContext, TResult, TController, TP1, TP2>
     {
-        private readonly Factory<TController> _controllerFactory;
+        private readonly Provider<TController> _controllerProvider;
         private readonly Dictionary<string, QueryCollector<TContext, TResult, TController, TP1, TP2>> _queryCollectors = new Dictionary<string, QueryCollector<TContext, TResult, TController, TP1, TP2>>();
 
-        public HttpMethodCollector(Factory<TController> controllerFactory)
+        public HttpMethodCollector(Provider<TController> controllerProvider)
         {
-            _controllerFactory = controllerFactory;
+            _controllerProvider = controllerProvider;
         }
         
         public HttpMethodCollector<TContext, TResult, TController, TP1, TP2> Method(
             string method,
             Mutator<QueryCollector<TContext, TResult, TController, TP1, TP2>> filler)
         {
-            _queryCollectors[method] = filler(new QueryCollector<TContext, TResult, TController, TP1, TP2>(_controllerFactory));
+            _queryCollectors[method] = filler(new QueryCollector<TContext, TResult, TController, TP1, TP2>(_controllerProvider));
             return this;
         }
         

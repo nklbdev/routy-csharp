@@ -20,11 +20,11 @@ namespace Service
             cb.RegisterType<NewsController>().AsSelf();
             cb.RegisterType<IndexView>().AsSelf();
             cb.RegisterType<AboutView>().AsSelf();
-            cb.Register<ViewFactory>(ctxt =>
+            cb.Register<ViewProvider>(ctxt =>
             {
                 var cwer = ctxt.Resolve<IComponentContext>();
                 return () => cwer.Resolve<AboutView>().Show;
-            }).Keyed<ViewFactory>("About");
+            }).Keyed<ViewProvider>("About");
             cb.Register<Func<ICollection<string>, View>>(ctxt =>
             {
                 var cwer = ctxt.Resolve<IComponentContext>();
@@ -53,7 +53,7 @@ namespace Service
                     root => root
                         .Named("about", methods => methods
                             .Method("get", h => h
-                                .Query(q => q, cf => () => c.ResolveKeyed<ViewFactory>("About")().Invoke)))
+                                .Query(q => q, cf => () => c.ResolveKeyed<ViewProvider>("About")().Invoke)))
                         .Named("news", c.Resolve<NewsController>,
                             methods => methods
                                 .Method("get", h => h

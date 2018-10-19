@@ -6,20 +6,20 @@ using Service.Views;
 
 namespace Service.Controllers
 {
-    public delegate View ViewFactory();
+    public delegate View ViewProvider();
 
     internal class HomeController
     {
         private static readonly List<string> Answers = new List<string>();
-        private readonly Func<ICollection<string>, View> _indexViewFactory;
-        private readonly ViewFactory _aboutViewFactory;
+        private readonly Func<ICollection<string>, View> _indexViewProvider;
+        private readonly ViewProvider _aboutViewProvider;
 
         public HomeController(
-            [KeyFilter("Index")] Func<ICollection<string>, View> indexViewFactory,
-            [KeyFilter("About")] ViewFactory aboutViewFactory)
+            [KeyFilter("Index")] Func<ICollection<string>, View> indexViewProvider,
+            [KeyFilter("About")] ViewProvider aboutViewProvider)
         {
-            _indexViewFactory = indexViewFactory;
-            _aboutViewFactory = aboutViewFactory;
+            _indexViewProvider = indexViewProvider;
+            _aboutViewProvider = aboutViewProvider;
         }
 
         public View PostAnswer(SimpleForm form)
@@ -29,8 +29,8 @@ namespace Service.Controllers
             return Index();
         }
 
-        public View Index() => _indexViewFactory(Answers).Invoke;
+        public View Index() => _indexViewProvider(Answers).Invoke;
 
-        public View About() => _aboutViewFactory().Invoke;
+        public View About() => _aboutViewProvider().Invoke;
     }
 }
