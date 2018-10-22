@@ -22,6 +22,7 @@ namespace Service
             cb.RegisterType<HomeController>().AsSelf().WithAttributeFiltering();
             cb.RegisterType<NewsController>().AsSelf();
             cb.RegisterType<IndexView>().AsSelf();
+            cb.RegisterType<ShmIndexView>().AsSelf();
             cb.RegisterType<AboutView>().AsSelf();
             cb.Register<ViewProvider>(ctxt =>
             {
@@ -38,12 +39,28 @@ namespace Service
                     return view.Show;
                 };
             }).Keyed<Func<ICollection<string>, View>>("Index");
+            cb.Register<Func<int, ICollection<string>, View>>(ctxt =>
+            {
+                var cwer = ctxt.Resolve<IComponentContext>();
+                return (shm, answers) =>
+                {
+                    var view = cwer.Resolve<ShmIndexView>();
+                    view.Answers = answers;
+                    view.Shm = shm;
+                    return view.Show;
+                };
+            }).Keyed<Func<int, ICollection<string>, View>>("ShmIndex");
             return cb.Build();
         }
 
         private static int ParseInt(NameValueCollection nvc)
         {
             return 3;
+        }
+
+        private static int ParseIntFromContext(HttpListenerRequest r)
+        {
+            return 1000;
         }
 
         public static void Main(string[] args)
@@ -54,14 +71,18 @@ namespace Service
             var handler = RequestHandlerFactory<HttpListenerRequest, View>
                 .Create(c.Resolve<HomeController>,
                     methods => methods
-                        .Method(MN.Get, queries => queries.Query(parameters => parameters, cf => cf().Index))
-                        .Method(MN.Post,
-                            queries => queries.Query(parameters => parameters.Context(ct => Deserialization.DeserializeFormUrlencoded<SimpleForm>(ct.InputStream)),
+                        .Method(MN.Get, queries => queries
+                            .Query(ParseIntFromContext, parameters => parameters.Context(), cf => cf().ShmIndex)
+                            .Query(parameters => parameters.Context(), cf => cf().EreIndex))
+                        .Method(MN.Post, queries => queries
+                            .Query(ct => Deserialization.DeserializeFormUrlencoded<SimpleForm>(ct.InputStream),
+                                parameters => parameters.Context(),
                                 cp => cp().PostAnswer)),
                     rootResources => rootResources
                         .Named("about", methods => methods
                             .Method(MN.Get, queries => queries
-                                .Query(parameters => parameters, cp => () => c.ResolveKeyed<ViewProvider>("About")().Invoke)))
+                                .Query(parameters => parameters,
+                                    cp => () => c.ResolveKeyed<ViewProvider>("About")().Invoke)))
                         .Named("news", c.Resolve<NewsController>,
                             methods => methods
                                 .Method(MN.Get, queries => queries

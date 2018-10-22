@@ -27,10 +27,10 @@ namespace Routy
 
     #region Parameter collector fillers
     
-    public delegate ParameterCollector<TContext, TResult, TController> ParameterCollectorFiller<TContext, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
-    public delegate ParameterCollector<TContext, TQ1, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
-    public delegate ParameterCollector<TContext, TQ1, TQ2, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
-    public delegate ParameterCollector<TContext, TQ1, TQ2, TQ3, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
+    public delegate ParameterCollector<TContext, TParsedContext, TResult, TController> ParameterCollectorFiller<TContext, TParsedContext, TResult, TController>(ParameterCollector<TContext, TParsedContext, TResult, TController> parameterCollector);
+    public delegate ParameterCollector<TContext, TParsedContext, TQ1, TResult, TController> ParameterCollectorFiller<TContext, TParsedContext, TQ1, TResult, TController>(ParameterCollector<TContext, TParsedContext, TResult, TController> parameterCollector);
+    public delegate ParameterCollector<TContext, TParsedContext, TQ1, TQ2, TResult, TController> ParameterCollectorFiller<TContext, TParsedContext, TQ1, TQ2, TResult, TController>(ParameterCollector<TContext, TParsedContext, TResult, TController> parameterCollector);
+    public delegate ParameterCollector<TContext, TParsedContext, TQ1, TQ2, TQ3, TResult, TController> ParameterCollectorFiller<TContext, TParsedContext, TQ1, TQ2, TQ3, TResult, TController>(ParameterCollector<TContext, TParsedContext, TResult, TController> parameterCollector);
     
     #endregion
 
