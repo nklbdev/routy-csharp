@@ -8,19 +8,17 @@ using Service.Views;
 
 namespace Service.Controllers
 {
-    public delegate View ViewProvider();
-
     internal class HomeController
     {
         private static readonly List<string> Answers = new List<string>();
         private readonly Func<ICollection<string>, View> _indexViewProvider;
         private readonly Func<int, ICollection<string>, View> _shmindexViewProvider;
-        private readonly ViewProvider _aboutViewProvider;
+        private readonly Func<View> _aboutViewProvider;
 
         public HomeController(
             [KeyFilter("Index")] Func<ICollection<string>, View> indexViewProvider,
             [KeyFilter("ShmIndex")] Func<int, ICollection<string>, View> shmindexViewProvider,
-            [KeyFilter("About")] ViewProvider aboutViewProvider)
+            [KeyFilter("About")] Func<View> aboutViewProvider)
         {
             _indexViewProvider = indexViewProvider;
             _aboutViewProvider = aboutViewProvider;
@@ -30,6 +28,13 @@ namespace Service.Controllers
         public View PostAnswer(SimpleForm form)
         {
             Answers.Add(form.Answer);
+            // todo make redirect
+            return Index();
+        }
+
+        public View PostAnswer(Task<SimpleForm> form)
+        {
+            Answers.Add(form.Result.Answer);
             // todo make redirect
             return Index();
         }

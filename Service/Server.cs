@@ -12,9 +12,9 @@ namespace Service
     public class Server
     {
         private readonly HttpListener _httpListener;
-        private readonly RequestHandler<HttpListenerRequest, View> _handler;
+        private readonly AsyncRequestHandler<HttpListenerRequest, View> _handler;
 
-        public Server(RequestHandler<HttpListenerRequest, View> handler)
+        public Server(AsyncRequestHandler<HttpListenerRequest, View> handler)
         {
             _httpListener = new HttpListener();
             _handler = handler;

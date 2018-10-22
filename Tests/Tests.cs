@@ -59,7 +59,7 @@ namespace Tests
         {
             void ExpectedResponder(int response) { }
 
-            var handler = RequestHandlerFactory<int, Action<int>>.Create(
+            var handler = RequestHandlerFactory<int, Action<int>>.CreateHandler(
                 () => new Ctrlr(ExpectedResponder),
                 m => m
                     .Method("get", q => q
@@ -80,7 +80,7 @@ namespace Tests
         {
             void ExpectedResponder(int response) { }
 
-            var handler = RequestHandlerFactory<int, Action<int>>.Create(() => new Ctrlr(ExpectedResponder),
+            var handler = RequestHandlerFactory<int, Action<int>>.CreateHandler(() => new Ctrlr(ExpectedResponder),
                 m => m.Method("get", q => q.Query(p => p.Single("a", int.Parse), cf => cf().Method)), n => n);
 
             var uri = new Uri("http://localhost?a=192");
@@ -119,7 +119,7 @@ namespace Tests
                 return serializer.Deserialize<T>(jsonTextReader);
         }
         
-        private static readonly Dictionary<Type, Parser<object>> _parsers = new Dictionary<Type, Parser<object>>
+        private static readonly Dictionary<Type, Func<string, object>> _parsers = new Dictionary<Type, Func<string, object>>
         {
             [typeof(string)] = s => s,
             [typeof(bool)] = s => bool.Parse(s),
@@ -154,7 +154,7 @@ namespace Tests
         {
             void ExpectedResponder(int response) { }
 
-            var handler = RequestHandlerFactory<Stream, bool>.Create(() => new Ctrlr(ExpectedResponder),
+            var handler = RequestHandlerFactory<Stream, bool>.CreateHandler(() => new Ctrlr(ExpectedResponder),
                 m => m.Method("get", q => q
                     .Query(p => p
                             .Context(JsonDeserialize<SomeEntity>),
@@ -176,7 +176,7 @@ namespace Tests
         {
             void ExpectedResponder(int response) { }
 
-            var handler = RequestHandlerFactory<Stream, bool>.Create(() => new Ctrlr(ExpectedResponder),
+            var handler = RequestHandlerFactory<Stream, bool>.CreateHandler(() => new Ctrlr(ExpectedResponder),
                 m => m.Method("get", q => q
                     .Query(p => p
                             .Context(FormUrlencodedDeserialize<SomeEntity>),

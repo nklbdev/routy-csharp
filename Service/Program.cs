@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using Autofac;
 using Autofac.Features.AttributeFilters;
 using Service.Controllers;
@@ -10,7 +11,7 @@ using Service.Forms;
 using Service.Views;
 using Routy;
 
-using MN = Service.HttpMethodNames;
+using Mn = Service.HttpMethodNames;
 
 namespace Service
 {
@@ -24,11 +25,11 @@ namespace Service
             cb.RegisterType<IndexView>().AsSelf();
             cb.RegisterType<ShmIndexView>().AsSelf();
             cb.RegisterType<AboutView>().AsSelf();
-            cb.Register<ViewProvider>(ctxt =>
+            cb.Register<Func<View>>(ctxt =>
             {
                 var cwer = ctxt.Resolve<IComponentContext>();
                 return () => cwer.Resolve<AboutView>().Show;
-            }).Keyed<ViewProvider>("About");
+            }).Keyed<Func<View>>("About");
             cb.Register<Func<ICollection<string>, View>>(ctxt =>
             {
                 var cwer = ctxt.Resolve<IComponentContext>();
@@ -58,43 +59,34 @@ namespace Service
             return 3;
         }
 
-        private static int ParseIntFromContext(HttpListenerRequest r)
-        {
-            return 1000;
-        }
+        private static T Deserialize<T>(HttpListenerRequest context) where T : new() =>
+            Deserialization.DeserializeFormUrlencoded<T>(context.InputStream);
+
+        private static Task<T> DeserializeAsync<T>(HttpListenerRequest context, CancellationToken ct) where T : new() =>
+            Task.FromResult(Deserialization.DeserializeFormUrlencoded<T>(context.InputStream));
 
         public static void Main(string[] args)
         {
             var cts = new CancellationTokenSource();
             var c = CreateContainer();
 
-            var handler = RequestHandlerFactory<HttpListenerRequest, View>
-                .Create(c.Resolve<HomeController>,
-                    methods => methods
-                        .Method(MN.Get, queries => queries
-                            .Sync(parameters => parameters.Context(), cf => cf().EreIndex))
-                        .Method(MN.Post, queries => queries
-                            .Sync(ct => Deserialization.DeserializeFormUrlencoded<SimpleForm>(ct.InputStream),
-                                parameters => parameters.Context(),
-                                cp => cp().PostAnswer)),
-                    rootResources => rootResources
-                        .Named("about", methods => methods
-                            .Method(MN.Get, queries => queries
-                                .Sync(parameters => parameters,
-                                    cp => () => c.ResolveKeyed<ViewProvider>("About")().Invoke)))
-                        .Named("news", c.Resolve<NewsController>,
-                            methods => methods
-                                .Method(MN.Get, queries => queries
-                                    .Sync(parameters => parameters
-                                            .Single("page", int.Parse, 0)
-                                            .Multiple("order", bool.Parse)
-                                            .Object(ParseInt),
-                                        cp => cp().Index)),
-                            newsResources => newsResources
-                                .Valued(int.Parse,
-                                    methods => methods
-                                        .Method(MN.Get, queries => queries
-                                            .Sync(parameters => parameters, cp => cp().Get)))));
+            var handler = RequestHandlerFactory<HttpListenerRequest, View>.CreateHandler(c.Resolve<HomeController>,
+                ms => ms
+                    .Method(Mn.Get, qs => qs
+                        .Sync(ps => ps.Context(), cf => cf().EreIndex))
+                    .Method(Mn.Post, queries => queries
+                        .Sync(ps => ps.Context(DeserializeAsync<SimpleForm>), cp => cp().PostAnswer)),
+                rs0 => rs0
+                    .Named("about", ms => ms
+                        .Method(Mn.Get, qs => qs
+                            .Sync(ps => ps, c.ResolveKeyed<Func<View>>("About"))))
+                    .Named("news", c.Resolve<NewsController>, ms => ms
+                            .Method(Mn.Get, qs => qs
+                                .Sync(ps => ps.Single("page", int.Parse, 0).Multiple("order", bool.Parse).Custom(ParseInt), cp => cp().Index)),
+                        rs1 => rs1
+                            .Valued(int.Parse, ms => ms
+                                .Method(Mn.Get, qs => qs
+                                    .Sync(ps => ps, cp => cp().Get)))));
 
             new Server(handler)
                 .RunAsync(cts.Token).Wait();

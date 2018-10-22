@@ -9,11 +9,11 @@ namespace Routy
 {
     public class ResourceCollector<TContext, TResult, TController>
     {
-        private readonly Provider<TController> _controllerProvider;
-        private readonly Dictionary<string, ResourceCollectorHandler<TContext, TResult>> _namedResourceHandlers = new Dictionary<string, ResourceCollectorHandler<TContext, TResult>>();
-        private readonly List<ResourceCollectorHandler<TContext, TResult>> _valuedResourceHandlers = new List<ResourceCollectorHandler<TContext, TResult>>();
+        private readonly Func<TController> _controllerProvider;
+        private readonly Dictionary<string, AsyncResourceCollectorHandler<TContext, TResult>> _namedResourceHandlers = new Dictionary<string, AsyncResourceCollectorHandler<TContext, TResult>>();
+        private readonly List<AsyncResourceCollectorHandler<TContext, TResult>> _valuedResourceHandlers = new List<AsyncResourceCollectorHandler<TContext, TResult>>();
 
-        public ResourceCollector(Provider<TController> controllerProvider)
+        public ResourceCollector(Func<TController> controllerProvider)
         {
             _controllerProvider = controllerProvider;
         }
@@ -24,7 +24,7 @@ namespace Routy
             ) => Named(name, _controllerProvider, httpMethodCollectorFiller, nestedResourceCollectorFiller);
         
         public ResourceCollector<TContext, TResult, TController> Named<TNewController>(string name,
-            Provider<TNewController> controllerProvider,
+            Func<TNewController> controllerProvider,
             Mutator<HttpMethodCollector<TContext, TResult, TNewController>> httpMethodCollectorFiller = null,
             Mutator<ResourceCollector<TContext, TResult, TNewController>> nestedResourceCollectorFiller = null
             )
@@ -33,17 +33,17 @@ namespace Routy
             if (nestedResourceCollectorFiller == null) nestedResourceCollectorFiller = x => x;
             _namedResourceHandlers[name] = new NamedResource<TContext, TResult>(
                 httpMethodCollectorFiller(new HttpMethodCollector<TContext, TResult, TNewController>(controllerProvider)).Handle,
-                nestedResourceCollectorFiller(new ResourceCollector<TContext, TResult, TNewController>(controllerProvider)).Handle).Handle;
+                nestedResourceCollectorFiller(new ResourceCollector<TContext, TResult, TNewController>(controllerProvider)).HandleAsync).HandleAsync;
             return this;
         }
         
-        public ResourceCollector<TContext, TResult, TController> Valued<TValue>(Parser<TValue> parser,
+        public ResourceCollector<TContext, TResult, TController> Valued<TValue>(Func<string, TValue> parser,
             Mutator<HttpMethodCollector<TContext, TResult, TController, TValue>> httpMethodCollectorFiller = null,
             Mutator<ResourceCollector<TContext, TResult, TController, TValue>> nestedResourceCollectorFiller = null
             ) => Valued(parser, _controllerProvider, httpMethodCollectorFiller, nestedResourceCollectorFiller);
 
-        public ResourceCollector<TContext, TResult, TController> Valued<TValue, TNewController>(Parser<TValue> parser,
-            Provider<TNewController> controllerProvider,
+        public ResourceCollector<TContext, TResult, TController> Valued<TValue, TNewController>(Func<string, TValue> parser,
+            Func<TNewController> controllerProvider,
             Mutator<HttpMethodCollector<TContext, TResult, TNewController, TValue>> httpMethodCollectorFiller = null,
             Mutator<ResourceCollector<TContext, TResult, TNewController, TValue>> nestedResourceCollectorFiller = null
             )
@@ -57,7 +57,7 @@ namespace Routy
             return this;
         }
         
-        public async Task<TResult> Handle(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, CancellationToken ct)
+        public async Task<TResult> HandleAsync(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, CancellationToken ct)
         {
             if (!urlSegments.Any())
                 throw new NotImplementedException("15");
@@ -83,11 +83,11 @@ namespace Routy
 
     public class ResourceCollector<TContext, TResult, TController, TP1>
     {
-        private readonly Provider<TController> _controllerProvider;
-        private readonly Dictionary<string, ResourceCollectorHandler<TContext, TResult, TP1>> _namedResourceHandlers = new Dictionary<string, ResourceCollectorHandler<TContext, TResult, TP1>>();
-        private readonly List<ResourceCollectorHandler<TContext, TResult, TP1>> _valuedResourceHandlers = new List<ResourceCollectorHandler<TContext, TResult, TP1>>();
+        private readonly Func<TController> _controllerProvider;
+        private readonly Dictionary<string, AsyncResourceCollectorHandler<TContext, TResult, TP1>> _namedResourceHandlers = new Dictionary<string, AsyncResourceCollectorHandler<TContext, TResult, TP1>>();
+        private readonly List<AsyncResourceCollectorHandler<TContext, TResult, TP1>> _valuedResourceHandlers = new List<AsyncResourceCollectorHandler<TContext, TResult, TP1>>();
 
-        public ResourceCollector(Provider<TController> controllerProvider)
+        public ResourceCollector(Func<TController> controllerProvider)
         {
             _controllerProvider = controllerProvider;
         }
@@ -118,11 +118,11 @@ namespace Routy
     
     public class ResourceCollector<TContext, TResult, TController, TP1, TP2>
     {
-        private readonly Provider<TController> _controllerProvider;
-        private readonly Dictionary<string, ResourceCollectorHandler<TContext, TResult, TP1, TP2>> _namedResourceHandlers = new Dictionary<string, ResourceCollectorHandler<TContext, TResult, TP1, TP2>>();
-        private readonly List<ResourceCollectorHandler<TContext, TResult, TP1, TP2>> _valuedResourceHandlers = new List<ResourceCollectorHandler<TContext, TResult, TP1, TP2>>();
+        private readonly Func<TController> _controllerProvider;
+        private readonly Dictionary<string, AsyncResourceCollectorHandler<TContext, TResult, TP1, TP2>> _namedResourceHandlers = new Dictionary<string, AsyncResourceCollectorHandler<TContext, TResult, TP1, TP2>>();
+        private readonly List<AsyncResourceCollectorHandler<TContext, TResult, TP1, TP2>> _valuedResourceHandlers = new List<AsyncResourceCollectorHandler<TContext, TResult, TP1, TP2>>();
 
-        public ResourceCollector(Provider<TController> controllerProvider)
+        public ResourceCollector(Func<TController> controllerProvider)
         {
             _controllerProvider = controllerProvider;
         }

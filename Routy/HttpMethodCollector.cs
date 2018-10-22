@@ -8,10 +8,10 @@ namespace Routy
 {
     public class HttpMethodCollector<TContext, TResult, TController>
     {
-        private readonly Provider<TController> _controllerProvider;
+        private readonly Func<TController> _controllerProvider;
         private readonly Dictionary<string, QueryCollector<TContext, TResult, TController>> _queryCollectors = new Dictionary<string, QueryCollector<TContext, TResult, TController>>();
 
-        public HttpMethodCollector(Provider<TController> controllerProvider)
+        public HttpMethodCollector(Func<TController> controllerProvider)
         {
             _controllerProvider = controllerProvider;
         }
@@ -35,10 +35,10 @@ namespace Routy
     
     public class HttpMethodCollector<TContext, TResult, TController, TP1>
     {
-        private readonly Provider<TController> _controllerProvider;
+        private readonly Func<TController> _controllerProvider;
         private readonly Dictionary<string, QueryCollector<TContext, TResult, TController, TP1>> _queryCollectors = new Dictionary<string, QueryCollector<TContext, TResult, TController, TP1>>();
 
-        public HttpMethodCollector(Provider<TController> controllerProvider)
+        public HttpMethodCollector(Func<TController> controllerProvider)
         {
             _controllerProvider = controllerProvider;
         }
@@ -61,10 +61,10 @@ namespace Routy
     
     public class HttpMethodCollector<TContext, TResult, TController, TP1, TP2>
     {
-        private readonly Provider<TController> _controllerProvider;
+        private readonly Func<TController> _controllerProvider;
         private readonly Dictionary<string, QueryCollector<TContext, TResult, TController, TP1, TP2>> _queryCollectors = new Dictionary<string, QueryCollector<TContext, TResult, TController, TP1, TP2>>();
 
-        public HttpMethodCollector(Provider<TController> controllerProvider)
+        public HttpMethodCollector(Func<TController> controllerProvider)
         {
             _controllerProvider = controllerProvider;
         }

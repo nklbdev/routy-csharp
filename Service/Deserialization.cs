@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Web;
-using Routy;
 
 namespace Service
 {
     public static class Deserialization
     {
-        private static readonly Dictionary<Type, Parser<object>> Parsers = new Dictionary<Type, Parser<object>>
+        private static readonly Dictionary<Type, Func<string, object>> Parsers = new Dictionary<Type, Func<string, object>>
         {
             [typeof(string)] = s => s,
             [typeof(bool)] = s => bool.Parse(s),
