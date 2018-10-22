@@ -72,21 +72,20 @@ namespace Service
                 .Create(c.Resolve<HomeController>,
                     methods => methods
                         .Method(MN.Get, queries => queries
-                            .Query(ParseIntFromContext, parameters => parameters.Context(), cf => cf().ShmIndex)
-                            .Query(parameters => parameters.Context(), cf => cf().EreIndex))
+                            .Sync(parameters => parameters.Context(), cf => cf().EreIndex))
                         .Method(MN.Post, queries => queries
-                            .Query(ct => Deserialization.DeserializeFormUrlencoded<SimpleForm>(ct.InputStream),
+                            .Sync(ct => Deserialization.DeserializeFormUrlencoded<SimpleForm>(ct.InputStream),
                                 parameters => parameters.Context(),
                                 cp => cp().PostAnswer)),
                     rootResources => rootResources
                         .Named("about", methods => methods
                             .Method(MN.Get, queries => queries
-                                .Query(parameters => parameters,
+                                .Sync(parameters => parameters,
                                     cp => () => c.ResolveKeyed<ViewProvider>("About")().Invoke)))
                         .Named("news", c.Resolve<NewsController>,
                             methods => methods
                                 .Method(MN.Get, queries => queries
-                                    .Query(parameters => parameters
+                                    .Sync(parameters => parameters
                                             .Single("page", int.Parse, 0)
                                             .Multiple("order", bool.Parse)
                                             .Object(ParseInt),
@@ -95,7 +94,7 @@ namespace Service
                                 .Valued(int.Parse,
                                     methods => methods
                                         .Method(MN.Get, queries => queries
-                                            .Query(parameters => parameters, cp => cp().Get)))));
+                                            .Sync(parameters => parameters, cp => cp().Get)))));
 
             new Server(handler)
                 .RunAsync(cts.Token).Wait();

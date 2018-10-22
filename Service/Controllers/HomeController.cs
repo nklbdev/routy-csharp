@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using Autofac.Features.AttributeFilters;
 using Service.Forms;
 using Service.Views;
@@ -35,7 +36,6 @@ namespace Service.Controllers
 
         public View Index() => _indexViewProvider(Answers).Invoke;
 
-        public View ShmIndex(int a) => _shmindexViewProvider(a, Answers).Invoke;
         public View EreIndex(HttpListenerRequest a) => _indexViewProvider(Answers).Invoke;
 
         public View About() => _aboutViewProvider().Invoke;

@@ -17,5 +17,17 @@ namespace Routy
             return async (method, uri, context, ct) =>
                 await col.Handle(method, uri.Segments.Select(s => s.Trim('/')).ToArray(), HttpUtility.ParseQueryString(uri.Query), context, ct);
         }
+
+        public static RequestHandler<TContext, TResult> Create(
+            Mutator<HttpMethodCollector<TContext, TResult, object>> httpMethodCollectorFiller = null,
+            Mutator<ResourceCollector<TContext, TResult, object>> nestedResourceCollectorFiller = null
+            )
+        {
+            var col = new ResourceCollector<TContext, TResult, object>(null)
+                .Named(string.Empty, null, httpMethodCollectorFiller, nestedResourceCollectorFiller);
+            
+            return async (method, uri, context, ct) =>
+                await col.Handle(method, uri.Segments.Select(s => s.Trim('/')).ToArray(), HttpUtility.ParseQueryString(uri.Query), context, ct);
+        }
     }
 }
