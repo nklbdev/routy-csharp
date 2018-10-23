@@ -21,8 +21,8 @@ namespace Routy
 
         public static ValueExtractor<TContext, T> Single<TContext, T>(string name, Func<string, T> parser, T def) => (context, parameters, ct) =>
         {
-            var str = (parameters.GetValues(name) ?? Enumerable.Empty<string>()).LastOrDefault();
-            return str == null ? def : parser(str);
+            var values = parameters.GetValues(name);
+            return values == null || values.Length == 0 ? def : parser(values.Last());
         };
 
         public static ValueExtractor<TContext, T[]> Multiple<TContext, T>(string name, Func<string, T> parser) => (context, parameters, ct) =>

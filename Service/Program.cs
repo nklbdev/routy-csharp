@@ -74,6 +74,10 @@ namespace Service
                 ms => ms
                     .Method(Mn.Get, qs => qs
                         .Sync(ps => ps.Context(), cf => cf().EreIndex))
+                    .Method(Mn.Get, qs => qs
+                        .Sync(ps => ps.Single("name"), cf => cf().EreIndex))
+                    .Method(Mn.Get, qs => qs
+                        .Sync(ps => ps.Single("name", "default"), cf => cf().EreIndex))
                     .Method(Mn.Post, queries => queries
                         .Sync(ps => ps.Context(DeserializeAsync<SimpleForm>), cp => cp().PostAnswer)),
                 rs0 => rs0

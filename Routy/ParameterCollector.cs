@@ -33,11 +33,20 @@ namespace Routy
         public ParameterCollector<TContext, T, TResult, TController> Single<T>(string name, Func<string, T> parser) =>
             CreateNext(ValueExtractors.Single<TContext, T>(name, parser));
 
+        public ParameterCollector<TContext, string, TResult, TController> Single(string name) =>
+            CreateNext(ValueExtractors.Single<TContext, string>(name, x => x));
+
         public ParameterCollector<TContext, T, TResult, TController> Single<T>(string name, Func<string, T> parser, T def) =>
             CreateNext(ValueExtractors.Single<TContext, T>(name, parser, def));
 
+        public ParameterCollector<TContext, string, TResult, TController> Single(string name, string def) =>
+            CreateNext(ValueExtractors.Single<TContext, string>(name, x => x, def));
+
         public ParameterCollector<TContext, T[], TResult, TController> Multiple<T>(string name, Func<string, T> parser) =>
             CreateNext(ValueExtractors.Multiple<TContext, T>(name, parser));
+
+        public ParameterCollector<TContext, string[], TResult, TController> Multiple(string name) =>
+            CreateNext(ValueExtractors.Multiple<TContext, string>(name, x => x));
 
         public ParameterCollector<TContext, T, TResult, TController> Custom<T>(Func<NameValueCollection, T> parser) =>
             CreateNext(ValueExtractors.Custom<TContext, T>(parser));

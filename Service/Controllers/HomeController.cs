@@ -42,6 +42,7 @@ namespace Service.Controllers
         public View Index() => _indexViewProvider(Answers).Invoke;
 
         public View EreIndex(HttpListenerRequest a) => _indexViewProvider(Answers).Invoke;
+        public View EreIndex(string a) => _indexViewProvider(Answers).Invoke;
 
         public View About() => _aboutViewProvider().Invoke;
     }
