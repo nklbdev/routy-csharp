@@ -63,7 +63,7 @@ namespace Tests
                 () => new Ctrlr(ExpectedResponder),
                 m => m
                     .Method("get", q => q
-                        .Query(p => p
+                        .Sync(p => p
                                 .Single("s", s => s)
                                 .Single("b", bool.Parse),
                             cf => new Ctrlr2(ExpectedResponder).Method)),
@@ -81,7 +81,7 @@ namespace Tests
             void ExpectedResponder(int response) { }
 
             var handler = RequestHandlerFactory<int, Action<int>>.CreateHandler(() => new Ctrlr(ExpectedResponder),
-                m => m.Method("get", q => q.Query(p => p.Single("a", int.Parse), cf => cf().Method)), n => n);
+                m => m.Method("get", q => q.Sync(p => p.Single("a", int.Parse), cf => cf().Method)), n => n);
 
             var uri = new Uri("http://localhost?a=192");
             var responder = handler("get", uri, 543, _cts.Token).Result;
@@ -156,7 +156,7 @@ namespace Tests
 
             var handler = RequestHandlerFactory<Stream, bool>.CreateHandler(() => new Ctrlr(ExpectedResponder),
                 m => m.Method("get", q => q
-                    .Query(p => p
+                    .Sync(p => p
                             .Context(JsonDeserialize<SomeEntity>),
                         cf => HandleSomeEntity)), n => n);
 
@@ -178,7 +178,7 @@ namespace Tests
 
             var handler = RequestHandlerFactory<Stream, bool>.CreateHandler(() => new Ctrlr(ExpectedResponder),
                 m => m.Method("get", q => q
-                    .Query(p => p
+                    .Sync(p => p
                             .Context(FormUrlencodedDeserialize<SomeEntity>),
                         cf => HandleSomeEntity)), n => n);
 
