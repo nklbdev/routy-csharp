@@ -6,8 +6,105 @@
     <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
     <Reference Include="System.Web" />
+    <None Update="Delegates.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Delegates.cs</LastGenOutput>
+    </None>
+    <None Include="Delegates.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Delegates.tt</DependentUpon>
+    </None>
+    <Compile Update="Delegates.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Delegates.tt</DependentUpon>
+    </Compile>
+    <Compile Update="HttpMethodCollector.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>HttpMethodCollector.tt</DependentUpon>
+    </Compile>
+    <None Update="HttpMethodCollector.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>HttpMethodCollector.cs</LastGenOutput>
+    </None>
+    <None Update="HttpMethodCollector.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>HttpMethodCollector.tt</DependentUpon>
+    </None>
+    <Compile Update="NamedResource.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>NamedResource.tt</DependentUpon>
+    </Compile>
+    <None Update="NamedResource.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>NamedResource.cs</LastGenOutput>
+    </None>
+    <None Update="NamedResource.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>NamedResource.tt</DependentUpon>
+    </None>
+    <Compile Update="ParameterCollector.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ParameterCollector.tt</DependentUpon>
+    </Compile>
+    <None Update="ParameterCollector.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ParameterCollector.cs</LastGenOutput>
+    </None>
+    <None Update="ParameterCollector.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ParameterCollector.tt</DependentUpon>
+    </None>
+    <Compile Update="QueryCollector.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>QueryCollector.tt</DependentUpon>
+    </Compile>
+    <None Update="QueryCollector.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>QueryCollector.cs</LastGenOutput>
+    </None>
+    <None Update="QueryCollector.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>QueryCollector.tt</DependentUpon>
+    </None>
+    <Compile Update="ResourceCollector.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ResourceCollector.tt</DependentUpon>
+    </Compile>
+    <None Update="ResourceCollector.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ResourceCollector.cs</LastGenOutput>
+    </None>
+    <None Update="ResourceCollector.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ResourceCollector.tt</DependentUpon>
+    </None>
+    <Compile Update="ValuedResource.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ValuedResource.tt</DependentUpon>
+    </Compile>
+    <None Update="ValuedResource.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ValuedResource.cs</LastGenOutput>
+    </None>
+    <None Update="ValuedResource.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ValuedResource.tt</DependentUpon>
+    </None>
   </ItemGroup>
 </Project>
