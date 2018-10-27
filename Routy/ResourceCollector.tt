@@ -1,9 +1,18 @@
 ﻿<#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
 <#@ import namespace="System.Linq" #>
-<#@ import namespace="System.Text" #>
-<#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
+<# const int maxParams = 16; #>
+<# const int funcCount = maxParams + 1; #>
+<# var paramCountRange = Enumerable.Range(0, funcCount).ToArray(); #>
+<#
+    string Q(string source) => string.IsNullOrEmpty(source) ? "" : $"<{source}>";
+    string L(string source) => string.IsNullOrEmpty(source) ? "" : $", {source}";
+    string R(string source) => string.IsNullOrEmpty(source) ? "" : $"{source}, ";
+    string S(string source) => L(R(source));
+    string J(params string[] sources) => string.Join(", ", sources.Where(x => !string.IsNullOrEmpty(x)));
+    string F(int count, string format) => J(Enumerable.Range(1, count).Select(x => format.Replace("_", x.ToString())).ToArray());
+#>
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -13,57 +22,61 @@ using System.Threading.Tasks;
 
 namespace Routy
 {
-    public class ResourceCollector<TContext, TResult, TController>
+<#foreach (var pc in paramCountRange){
+      var posTypeParams = F(pc, "TP_");#>
+    public class ResourceCollector<TContext<#=L(posTypeParams)#>, TResult, TController>
     {
         private readonly Func<TController> _controllerProvider;
-        private readonly Dictionary<string, AsyncResourceCollectorHandler<TContext, TResult>> _namedResourceHandlers = new Dictionary<string, AsyncResourceCollectorHandler<TContext, TResult>>();
-        private readonly List<AsyncResourceCollectorHandler<TContext, TResult>> _valuedResourceHandlers = new List<AsyncResourceCollectorHandler<TContext, TResult>>();
+        private readonly Dictionary<string, AsyncResourceCollectorHandler<TContext<#=L(posTypeParams)#>, TResult>> _namedResourceHandlers = new Dictionary<string, AsyncResourceCollectorHandler<TContext<#=L(posTypeParams)#>, TResult>>();
+        private readonly List<AsyncResourceCollectorHandler<TContext<#=L(posTypeParams)#>, TResult>> _valuedResourceHandlers = new List<AsyncResourceCollectorHandler<TContext<#=L(posTypeParams)#>, TResult>>();
 
         public ResourceCollector(Func<TController> controllerProvider)
         {
             _controllerProvider = controllerProvider;
         }
 
-        public ResourceCollector<TContext, TResult, TController> Named(string name,
-            Mutator<HttpMethodCollector<TContext, TResult, TController>> httpMethodCollectorFiller = null,
-            Mutator<ResourceCollector<TContext, TResult, TController>> nestedResourceCollectorFiller = null
+<#    if (pc < maxParams){#>
+        public ResourceCollector<TContext<#=L(posTypeParams)#>, TResult, TController> Named(string name,
+            Mutator<HttpMethodCollector<TContext<#=L(posTypeParams)#>, TResult, TController>> httpMethodCollectorFiller = null,
+            Mutator<ResourceCollector<TContext<#=L(posTypeParams)#>, TResult, TController>> nestedResourceCollectorFiller = null
             ) => Named(name, _controllerProvider, httpMethodCollectorFiller, nestedResourceCollectorFiller);
         
-        public ResourceCollector<TContext, TResult, TController> Named<TNewController>(string name,
+        public ResourceCollector<TContext<#=L(posTypeParams)#>, TResult, TController> Named<TNewController>(string name,
             Func<TNewController> controllerProvider,
-            Mutator<HttpMethodCollector<TContext, TResult, TNewController>> httpMethodCollectorFiller = null,
-            Mutator<ResourceCollector<TContext, TResult, TNewController>> nestedResourceCollectorFiller = null
+            Mutator<HttpMethodCollector<TContext<#=L(posTypeParams)#>, TResult, TNewController>> httpMethodCollectorFiller = null,
+            Mutator<ResourceCollector<TContext<#=L(posTypeParams)#>, TResult, TNewController>> nestedResourceCollectorFiller = null
             )
         {
             if (httpMethodCollectorFiller == null) httpMethodCollectorFiller = x => x;
             if (nestedResourceCollectorFiller == null) nestedResourceCollectorFiller = x => x;
-            _namedResourceHandlers[name] = new NamedResource<TContext, TResult>(
-                httpMethodCollectorFiller(new HttpMethodCollector<TContext, TResult, TNewController>(controllerProvider)).Handle,
-                nestedResourceCollectorFiller(new ResourceCollector<TContext, TResult, TNewController>(controllerProvider)).HandleAsync).HandleAsync;
+            _namedResourceHandlers[name] = new NamedResource<TContext<#=L(F(pc, "TP_"))#>, TResult>(
+                httpMethodCollectorFiller(new HttpMethodCollector<TContext<#=L(posTypeParams)#>, TResult, TNewController>(controllerProvider)).Handle,
+                nestedResourceCollectorFiller(new ResourceCollector<TContext<#=L(posTypeParams)#>, TResult, TNewController>(controllerProvider)).HandleAsync).HandleAsync;
             return this;
         }
         
-        public ResourceCollector<TContext, TResult, TController> Valued<TValue>(Func<string, TValue> parser,
-            Mutator<HttpMethodCollector<TContext, TResult, TController, TValue>> httpMethodCollectorFiller = null,
-            Mutator<ResourceCollector<TContext, TResult, TController, TValue>> nestedResourceCollectorFiller = null
+        public ResourceCollector<TContext<#=L(posTypeParams)#>, TResult, TController> Valued<TValue>(Func<string, TValue> parser,
+            Mutator<HttpMethodCollector<TContext<#=L(posTypeParams)#>, TValue, TResult, TController>> httpMethodCollectorFiller = null,
+            Mutator<ResourceCollector<TContext<#=L(posTypeParams)#>, TValue, TResult, TController>> nestedResourceCollectorFiller = null
             ) => Valued(parser, _controllerProvider, httpMethodCollectorFiller, nestedResourceCollectorFiller);
 
-        public ResourceCollector<TContext, TResult, TController> Valued<TValue, TNewController>(Func<string, TValue> parser,
+        public ResourceCollector<TContext<#=L(posTypeParams)#>, TResult, TController> Valued<TValue, TNewController>(Func<string, TValue> parser,
             Func<TNewController> controllerProvider,
-            Mutator<HttpMethodCollector<TContext, TResult, TNewController, TValue>> httpMethodCollectorFiller = null,
-            Mutator<ResourceCollector<TContext, TResult, TNewController, TValue>> nestedResourceCollectorFiller = null
+            Mutator<HttpMethodCollector<TContext<#=L(posTypeParams)#>, TValue, TResult, TNewController>> httpMethodCollectorFiller = null,
+            Mutator<ResourceCollector<TContext<#=L(posTypeParams)#>, TValue, TResult, TNewController>> nestedResourceCollectorFiller = null
             )
         {
             if (httpMethodCollectorFiller == null) httpMethodCollectorFiller = x => x;
             if (nestedResourceCollectorFiller == null) nestedResourceCollectorFiller = x => x;
-            _valuedResourceHandlers.Add(new ValuedResource<TContext, TResult, TValue>(
+            _valuedResourceHandlers.Add(new ValuedResource<TContext<#=L(F(pc, "TP_"))#>, TValue, TResult>(
                 parser,
-                httpMethodCollectorFiller(new HttpMethodCollector<TContext, TResult, TNewController, TValue>(controllerProvider)).Handle,
-                nestedResourceCollectorFiller(new ResourceCollector<TContext, TResult, TNewController, TValue>(controllerProvider)).Handle).Handle);
+                httpMethodCollectorFiller(new HttpMethodCollector<TContext<#=L(posTypeParams)#>, TValue, TResult, TNewController>(controllerProvider)).Handle,
+                nestedResourceCollectorFiller(new ResourceCollector<TContext<#=L(posTypeParams)#>, TValue, TResult, TNewController>(controllerProvider)).HandleAsync).Handle);
             return this;
         }
-        
-        public async Task<TResult> HandleAsync(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, CancellationToken ct)
+
+<#    }#>
+        public async Task<TResult> HandleAsync(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context<#=L(F(pc, "TP_ p_"))#>, CancellationToken ct)
         {
             if (!urlSegments.Any())
                 throw new NotImplementedException("15");
@@ -71,12 +84,12 @@ namespace Routy
             var urlHead = urlSegments.First();
 
             if (_namedResourceHandlers.TryGetValue(urlHead, out var namedResourceHandler))
-                return await namedResourceHandler(httpMethod, urlSegments, queryParameters, context, ct);
+                return await namedResourceHandler(httpMethod, urlSegments, queryParameters, context<#=L(F(pc, "p_"))#>, ct);
 
             foreach (var valuedResourceHandler in _valuedResourceHandlers)
                 try
                 {
-                    return await valuedResourceHandler(httpMethod, urlSegments, queryParameters, context, ct);
+                    return await valuedResourceHandler(httpMethod, urlSegments, queryParameters, context<#=L(F(pc, "p_"))#>, ct);
                 }
                 catch
                 {
@@ -87,73 +100,5 @@ namespace Routy
         }
     }
 
-    public class ResourceCollector<TContext, TResult, TController, TP1>
-    {
-        private readonly Func<TController> _controllerProvider;
-        private readonly Dictionary<string, AsyncResourceCollectorHandler<TContext, TResult, TP1>> _namedResourceHandlers = new Dictionary<string, AsyncResourceCollectorHandler<TContext, TResult, TP1>>();
-        private readonly List<AsyncResourceCollectorHandler<TContext, TResult, TP1>> _valuedResourceHandlers = new List<AsyncResourceCollectorHandler<TContext, TResult, TP1>>();
-
-        public ResourceCollector(Func<TController> controllerProvider)
-        {
-            _controllerProvider = controllerProvider;
-        }
-        
-        public async Task<TResult> Handle(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 p1, CancellationToken ct)
-        {
-            if (!urlSegments.Any())
-                throw new NotImplementedException("17");
-            
-            var urlHead = urlSegments.First();
-
-            if (_namedResourceHandlers.TryGetValue(urlHead, out var namedResourceHandler))
-                return await namedResourceHandler(httpMethod, urlSegments, queryParameters, context, p1, ct);
-
-            foreach (var valuedResourceHandler in _valuedResourceHandlers)
-                try
-                {
-                    return await valuedResourceHandler(httpMethod, urlSegments, queryParameters, context, p1, ct);
-                }
-                catch
-                {
-                    
-                }
-            
-            throw new NotImplementedException("18");
-        }
-    }
-    
-    public class ResourceCollector<TContext, TResult, TController, TP1, TP2>
-    {
-        private readonly Func<TController> _controllerProvider;
-        private readonly Dictionary<string, AsyncResourceCollectorHandler<TContext, TResult, TP1, TP2>> _namedResourceHandlers = new Dictionary<string, AsyncResourceCollectorHandler<TContext, TResult, TP1, TP2>>();
-        private readonly List<AsyncResourceCollectorHandler<TContext, TResult, TP1, TP2>> _valuedResourceHandlers = new List<AsyncResourceCollectorHandler<TContext, TResult, TP1, TP2>>();
-
-        public ResourceCollector(Func<TController> controllerProvider)
-        {
-            _controllerProvider = controllerProvider;
-        }
-        
-        public async Task<TResult> Handle(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 p1, TP2 p2, CancellationToken ct)
-        {
-            if (!urlSegments.Any())
-                throw new NotImplementedException("19");
-            
-            var urlHead = urlSegments.First();
-
-            if (_namedResourceHandlers.TryGetValue(urlHead, out var namedResourceHandler))
-                return await namedResourceHandler(httpMethod, urlSegments, queryParameters, context, p1, p2, ct);
-
-            foreach (var valuedResourceHandler in _valuedResourceHandlers)
-                try
-                {
-                    return await valuedResourceHandler(httpMethod, urlSegments, queryParameters, context, p1, p2, ct);
-                }
-                catch
-                {
-                    
-                }
-            
-            throw new NotImplementedException("20");
-        }
-    }
+<#}#>
 }

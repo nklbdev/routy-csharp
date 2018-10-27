@@ -4,6 +4,9 @@
     <RootNamespace>Service</RootNamespace>
     <AssemblyName>Service</AssemblyName>
     <OutputPath>bin\Debug\</OutputPath>
+    <ApplicationIcon />
+    <OutputType>Exe</OutputType>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.8.1" />
@@ -17,5 +20,19 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Routy\Routy.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Templates\About.hbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\Error.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\Index.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\Index.hbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

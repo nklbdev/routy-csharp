@@ -82,11 +82,21 @@ namespace Service
                         .Sync(ps => ps.Context(DeserializeAsync<SimpleForm>), cp => cp().PostAnswer)),
                 rs0 => rs0
                     .Named("about", ms => ms
-                        .Method(Mn.Get, qs => qs
-                            .Sync(ps => ps, c.ResolveKeyed<Func<View>>("About"))))
+                            .Method(Mn.Get, qs => qs
+                                .Sync(ps => ps, c.ResolveKeyed<Func<View>>("About"))),
+                        rs1 => rs1
+                            .Named("organization", ms => ms
+                                    .Method(Mn.Get, qs => qs
+                                        .Sync(ps => ps, c.ResolveKeyed<Func<View>>("About"))),
+                                rs2 => rs2
+                                    .Valued(int.Parse, c.Resolve<NewsController>, ms => ms
+                                        .Method(Mn.Get, qs => qs
+                                            .Sync(ps => ps.Multiple("order", bool.Parse)
+                                                    .Custom(ParseInt), cp => cp().Index)))))
                     .Named("news", c.Resolve<NewsController>, ms => ms
                             .Method(Mn.Get, qs => qs
-                                .Sync(ps => ps.Single("page", int.Parse, 0).Multiple("order", bool.Parse).Custom(ParseInt), cp => cp().Index)),
+                                .Sync(ps => ps.Single("page", int.Parse, 0).Multiple("order", bool.Parse)
+                                        .Custom(ParseInt), cp => cp().Index)),
                         rs1 => rs1
                             .Valued(int.Parse, ms => ms
                                 .Method(Mn.Get, qs => qs

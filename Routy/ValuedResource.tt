@@ -1,9 +1,18 @@
 ﻿<#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
 <#@ import namespace="System.Linq" #>
-<#@ import namespace="System.Text" #>
-<#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
+<# const int maxParams = 16; #>
+<# const int funcCount = maxParams + 1; #>
+<# var paramCountRange = Enumerable.Range(0, funcCount - 1).ToArray(); #>
+<#
+    string Q(string source) => string.IsNullOrEmpty(source) ? "" : $"<{source}>";
+    string L(string source) => string.IsNullOrEmpty(source) ? "" : $", {source}";
+    string R(string source) => string.IsNullOrEmpty(source) ? "" : $"{source}, ";
+    string S(string source) => L(R(source));
+    string J(params string[] sources) => string.Join(", ", sources.Where(x => !string.IsNullOrEmpty(x)));
+    string F(int count, string format) => J(Enumerable.Range(1, count).Select(x => format.Replace("_", x.ToString())).ToArray());
+#>
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -13,23 +22,27 @@ using System.Threading.Tasks;
 
 namespace Routy
 {
-    public class ValuedResource<TContext, TResult, TValue>
+<#foreach (var pc in paramCountRange){
+      var posTypeParams = F(pc, "TP_");
+      var posParams = F(pc, "TP_ p_");
+      var posParams2 = F(pc, "p_");#>
+    public class ValuedResource<TContext<#=L(posTypeParams)#>, TValue, TResult>
     {
         private readonly Func<string, TValue> _parser;
-        private readonly AsyncHttpMethodCollectorHandler<TContext, TResult, TValue> _methodCollectorHandler;
-        private readonly AsyncResourceCollectorHandler<TContext, TResult, TValue> _nestedAsyncResourceCollectorHandler;
+        private readonly AsyncHttpMethodCollectorHandler<TContext<#=L(posTypeParams)#>, TValue, TResult> _methodCollectorHandler;
+        private readonly AsyncResourceCollectorHandler<TContext<#=L(posTypeParams)#>, TValue, TResult> _nestedAsyncResourceCollectorHandler;
         
         public ValuedResource(
             Func<string, TValue> parser,
-            AsyncHttpMethodCollectorHandler<TContext, TResult, TValue> methodCollectorHandler,
-            AsyncResourceCollectorHandler<TContext, TResult, TValue> nestedAsyncResourceCollectorHandler)
+            AsyncHttpMethodCollectorHandler<TContext<#=L(posTypeParams)#>, TValue, TResult> methodCollectorHandler,
+            AsyncResourceCollectorHandler<TContext<#=L(posTypeParams)#>, TValue, TResult> nestedAsyncResourceCollectorHandler)
         {
             _parser = parser;
             _methodCollectorHandler = methodCollectorHandler;
             _nestedAsyncResourceCollectorHandler = nestedAsyncResourceCollectorHandler;
         }
         
-        public async Task<TResult> Handle(string httpMethod, IEnumerable<string> uriSegments, NameValueCollection query, TContext context, CancellationToken ct)
+        public async Task<TResult> Handle(string httpMethod, IEnumerable<string> uriSegments, NameValueCollection query, TContext context<#=L(posParams)#>, CancellationToken ct)
         {
             if (!uriSegments.Any())
                 throw new NotImplementedException("1");
@@ -40,8 +53,10 @@ namespace Routy
             var value = _parser(head);
 
             return tail.Any()
-                ? await _nestedAsyncResourceCollectorHandler(httpMethod, tail, query, context, value, ct)
-                : await _methodCollectorHandler(httpMethod, query, context, value, ct);
+                ? await _nestedAsyncResourceCollectorHandler(httpMethod, tail, query, context<#=L(posParams2)#>, value, ct)
+                : await _methodCollectorHandler(httpMethod, query, context<#=L(posParams2)#>, value, ct);
         }
     }
+
+<#}#>
 }
