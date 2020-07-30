@@ -22,8 +22,8 @@ title: Routy
 email: nklbdev@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   Routy is a functional strategy chooser for processing URIs
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://nklbdev.github.io/routy-csharp" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "routy-csharp" # the subpath of your site, e.g. /blog
+url: "https://nklbdev.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: nklbdev
 github_username:  nklbdev
 
