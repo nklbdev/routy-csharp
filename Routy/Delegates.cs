@@ -1,97 +1,46 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Routy
-{
-    // RequestHandler
-    public delegate Task<TResult> AsyncRequestHandler<in TContext, TResult>(string httpMethod, Uri uri, TContext context, CancellationToken ct);
+namespace Routy;
 
-    // Functional value extractor
-    public delegate T ValueExtractor<in TContext, out T>(TContext context, NameValueCollection parameters, CancellationToken ct);
+// RequestHandler
+public delegate TResult RequestHandler<in TContext, out TResult>(string httpMethod, Uri uri, TContext context);
 
-    // Functional mutator
-    public delegate T Mutator<T>(T t);
+// Functional value extractor
+public delegate T ValueExtractor<in TContext, out T>(TContext context, NameValueCollection parameters);
 
-    #region Parameter collector fillers
+// Value parser
+public delegate TErr Parser<TRes, out TErr>(string source, out TRes result);
 
-    public delegate ParameterCollector<TContext, TResult, TController> ParameterCollectorFiller<TContext, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
-    public delegate ParameterCollector<TContext, TQ1, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
-    public delegate ParameterCollector<TContext, TQ1, TQ2, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
-    public delegate ParameterCollector<TContext, TQ1, TQ2, TQ3, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
-    public delegate ParameterCollector<TContext, TQ1, TQ2, TQ3, TQ4, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TQ4, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
-    public delegate ParameterCollector<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
-    public delegate ParameterCollector<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
-    public delegate ParameterCollector<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TQ7, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TQ7, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
-    public delegate ParameterCollector<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TQ7, TQ8, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TQ7, TQ8, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
-    public delegate ParameterCollector<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TQ7, TQ8, TQ9, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TQ7, TQ8, TQ9, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
-    public delegate ParameterCollector<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TQ7, TQ8, TQ9, TQ10, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TQ7, TQ8, TQ9, TQ10, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
-    public delegate ParameterCollector<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TQ7, TQ8, TQ9, TQ10, TQ11, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TQ7, TQ8, TQ9, TQ10, TQ11, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
-    public delegate ParameterCollector<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TQ7, TQ8, TQ9, TQ10, TQ11, TQ12, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TQ7, TQ8, TQ9, TQ10, TQ11, TQ12, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
-    public delegate ParameterCollector<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TQ7, TQ8, TQ9, TQ10, TQ11, TQ12, TQ13, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TQ7, TQ8, TQ9, TQ10, TQ11, TQ12, TQ13, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
-    public delegate ParameterCollector<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TQ7, TQ8, TQ9, TQ10, TQ11, TQ12, TQ13, TQ14, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TQ7, TQ8, TQ9, TQ10, TQ11, TQ12, TQ13, TQ14, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
-    public delegate ParameterCollector<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TQ7, TQ8, TQ9, TQ10, TQ11, TQ12, TQ13, TQ14, TQ15, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TQ7, TQ8, TQ9, TQ10, TQ11, TQ12, TQ13, TQ14, TQ15, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
-    public delegate ParameterCollector<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TQ7, TQ8, TQ9, TQ10, TQ11, TQ12, TQ13, TQ14, TQ15, TQ16, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TQ4, TQ5, TQ6, TQ7, TQ8, TQ9, TQ10, TQ11, TQ12, TQ13, TQ14, TQ15, TQ16, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
+// Functional mutator
+public delegate T Mutator<T>(T t);
 
-    #endregion
+#region Parameter collector fillers
 
-    #region Middle handlers
+public delegate ParameterCollector<TContext, TResult, TController> ParameterCollectorFiller<TContext, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
+public delegate ParameterCollector<TContext, TQ1, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
+public delegate ParameterCollector<TContext, TQ1, TQ2, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TQ2, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
+public delegate ParameterCollector<TContext, TQ1, TQ2, TQ3, TResult, TController> ParameterCollectorFiller<TContext, TQ1, TQ2, TQ3, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
 
-    public delegate Task<TResult> AsyncResourceCollectorHandler<in TContext, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, CancellationToken ct);
-    public delegate Task<TResult> AsyncResourceCollectorHandler<in TContext, in TP1, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 tp1, CancellationToken ct);
-    public delegate Task<TResult> AsyncResourceCollectorHandler<in TContext, in TP1, in TP2, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 tp1, TP2 tp2, CancellationToken ct);
-    public delegate Task<TResult> AsyncResourceCollectorHandler<in TContext, in TP1, in TP2, in TP3, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, CancellationToken ct);
-    public delegate Task<TResult> AsyncResourceCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, CancellationToken ct);
-    public delegate Task<TResult> AsyncResourceCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, CancellationToken ct);
-    public delegate Task<TResult> AsyncResourceCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, CancellationToken ct);
-    public delegate Task<TResult> AsyncResourceCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, CancellationToken ct);
-    public delegate Task<TResult> AsyncResourceCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, CancellationToken ct);
-    public delegate Task<TResult> AsyncResourceCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, CancellationToken ct);
-    public delegate Task<TResult> AsyncResourceCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, CancellationToken ct);
-    public delegate Task<TResult> AsyncResourceCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, in TP11, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, TP11 tp11, CancellationToken ct);
-    public delegate Task<TResult> AsyncResourceCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, in TP11, in TP12, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, TP11 tp11, TP12 tp12, CancellationToken ct);
-    public delegate Task<TResult> AsyncResourceCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, in TP11, in TP12, in TP13, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, TP11 tp11, TP12 tp12, TP13 tp13, CancellationToken ct);
-    public delegate Task<TResult> AsyncResourceCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, in TP11, in TP12, in TP13, in TP14, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, TP11 tp11, TP12 tp12, TP13 tp13, TP14 tp14, CancellationToken ct);
-    public delegate Task<TResult> AsyncResourceCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, in TP11, in TP12, in TP13, in TP14, in TP15, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, TP11 tp11, TP12 tp12, TP13 tp13, TP14 tp14, TP15 tp15, CancellationToken ct);
-    public delegate Task<TResult> AsyncResourceCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, in TP11, in TP12, in TP13, in TP14, in TP15, in TP16, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, TP11 tp11, TP12 tp12, TP13 tp13, TP14 tp14, TP15 tp15, TP16 tp16, CancellationToken ct);
+#endregion
 
-    public delegate Task<TResult> AsyncHttpMethodCollectorHandler<in TContext, TResult>(string httpMethod, NameValueCollection query, TContext context, CancellationToken ct);
-    public delegate Task<TResult> AsyncHttpMethodCollectorHandler<in TContext, in TP1, TResult>(string httpMethod, NameValueCollection query, TContext context, TP1 tp1, CancellationToken ct);
-    public delegate Task<TResult> AsyncHttpMethodCollectorHandler<in TContext, in TP1, in TP2, TResult>(string httpMethod, NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, CancellationToken ct);
-    public delegate Task<TResult> AsyncHttpMethodCollectorHandler<in TContext, in TP1, in TP2, in TP3, TResult>(string httpMethod, NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, CancellationToken ct);
-    public delegate Task<TResult> AsyncHttpMethodCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, TResult>(string httpMethod, NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, CancellationToken ct);
-    public delegate Task<TResult> AsyncHttpMethodCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, TResult>(string httpMethod, NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, CancellationToken ct);
-    public delegate Task<TResult> AsyncHttpMethodCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, TResult>(string httpMethod, NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, CancellationToken ct);
-    public delegate Task<TResult> AsyncHttpMethodCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, TResult>(string httpMethod, NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, CancellationToken ct);
-    public delegate Task<TResult> AsyncHttpMethodCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, TResult>(string httpMethod, NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, CancellationToken ct);
-    public delegate Task<TResult> AsyncHttpMethodCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, TResult>(string httpMethod, NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, CancellationToken ct);
-    public delegate Task<TResult> AsyncHttpMethodCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, TResult>(string httpMethod, NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, CancellationToken ct);
-    public delegate Task<TResult> AsyncHttpMethodCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, in TP11, TResult>(string httpMethod, NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, TP11 tp11, CancellationToken ct);
-    public delegate Task<TResult> AsyncHttpMethodCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, in TP11, in TP12, TResult>(string httpMethod, NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, TP11 tp11, TP12 tp12, CancellationToken ct);
-    public delegate Task<TResult> AsyncHttpMethodCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, in TP11, in TP12, in TP13, TResult>(string httpMethod, NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, TP11 tp11, TP12 tp12, TP13 tp13, CancellationToken ct);
-    public delegate Task<TResult> AsyncHttpMethodCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, in TP11, in TP12, in TP13, in TP14, TResult>(string httpMethod, NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, TP11 tp11, TP12 tp12, TP13 tp13, TP14 tp14, CancellationToken ct);
-    public delegate Task<TResult> AsyncHttpMethodCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, in TP11, in TP12, in TP13, in TP14, in TP15, TResult>(string httpMethod, NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, TP11 tp11, TP12 tp12, TP13 tp13, TP14 tp14, TP15 tp15, CancellationToken ct);
-    public delegate Task<TResult> AsyncHttpMethodCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, in TP11, in TP12, in TP13, in TP14, in TP15, in TP16, TResult>(string httpMethod, NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, TP11 tp11, TP12 tp12, TP13 tp13, TP14 tp14, TP15 tp15, TP16 tp16, CancellationToken ct);
+#region Middle handlers
 
-    public delegate Task<TResult> AsyncParameterCollectorHandler<in TContext, TResult>(NameValueCollection query, TContext context, CancellationToken ct);
-    public delegate Task<TResult> AsyncParameterCollectorHandler<in TContext, in TP1, TResult>(NameValueCollection query, TContext context, TP1 tp1, CancellationToken ct);
-    public delegate Task<TResult> AsyncParameterCollectorHandler<in TContext, in TP1, in TP2, TResult>(NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, CancellationToken ct);
-    public delegate Task<TResult> AsyncParameterCollectorHandler<in TContext, in TP1, in TP2, in TP3, TResult>(NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, CancellationToken ct);
-    public delegate Task<TResult> AsyncParameterCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, TResult>(NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, CancellationToken ct);
-    public delegate Task<TResult> AsyncParameterCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, TResult>(NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, CancellationToken ct);
-    public delegate Task<TResult> AsyncParameterCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, TResult>(NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, CancellationToken ct);
-    public delegate Task<TResult> AsyncParameterCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, TResult>(NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, CancellationToken ct);
-    public delegate Task<TResult> AsyncParameterCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, TResult>(NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, CancellationToken ct);
-    public delegate Task<TResult> AsyncParameterCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, TResult>(NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, CancellationToken ct);
-    public delegate Task<TResult> AsyncParameterCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, TResult>(NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, CancellationToken ct);
-    public delegate Task<TResult> AsyncParameterCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, in TP11, TResult>(NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, TP11 tp11, CancellationToken ct);
-    public delegate Task<TResult> AsyncParameterCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, in TP11, in TP12, TResult>(NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, TP11 tp11, TP12 tp12, CancellationToken ct);
-    public delegate Task<TResult> AsyncParameterCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, in TP11, in TP12, in TP13, TResult>(NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, TP11 tp11, TP12 tp12, TP13 tp13, CancellationToken ct);
-    public delegate Task<TResult> AsyncParameterCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, in TP11, in TP12, in TP13, in TP14, TResult>(NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, TP11 tp11, TP12 tp12, TP13 tp13, TP14 tp14, CancellationToken ct);
-    public delegate Task<TResult> AsyncParameterCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, in TP11, in TP12, in TP13, in TP14, in TP15, TResult>(NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, TP11 tp11, TP12 tp12, TP13 tp13, TP14 tp14, TP15 tp15, CancellationToken ct);
-    public delegate Task<TResult> AsyncParameterCollectorHandler<in TContext, in TP1, in TP2, in TP3, in TP4, in TP5, in TP6, in TP7, in TP8, in TP9, in TP10, in TP11, in TP12, in TP13, in TP14, in TP15, in TP16, TResult>(NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3, TP4 tp4, TP5 tp5, TP6 tp6, TP7 tp7, TP8 tp8, TP9 tp9, TP10 tp10, TP11 tp11, TP12 tp12, TP13 tp13, TP14 tp14, TP15 tp15, TP16 tp16, CancellationToken ct);
+public delegate TResult ResourceCollectorHandler<in TContext, out TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context);
+public delegate TResult ResourceCollectorHandler<in TContext, in TP1, out TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 tp1);
+public delegate TResult ResourceCollectorHandler<in TContext, in TP1, in TP2, out TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 tp1, TP2 tp2);
+public delegate TResult ResourceCollectorHandler<in TContext, in TP1, in TP2, in TP3, out TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context, TP1 tp1, TP2 tp2, TP3 tp3);
 
-    #endregion
-}
+public delegate TResult HttpMethodCollectorHandler<in TContext, out TResult>(string httpMethod, NameValueCollection query, TContext context);
+public delegate TResult HttpMethodCollectorHandler<in TContext, in TP1, out TResult>(string httpMethod, NameValueCollection query, TContext context, TP1 tp1);
+public delegate TResult HttpMethodCollectorHandler<in TContext, in TP1, in TP2, out TResult>(string httpMethod, NameValueCollection query, TContext context, TP1 tp1, TP2 tp2);
+public delegate TResult HttpMethodCollectorHandler<in TContext, in TP1, in TP2, in TP3, out TResult>(string httpMethod, NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3);
+
+public delegate TResult ParameterCollectorHandler<in TContext, out TResult>(NameValueCollection query, TContext context);
+public delegate TResult ParameterCollectorHandler<in TContext, in TP1, out TResult>(NameValueCollection query, TContext context, TP1 tp1);
+public delegate TResult ParameterCollectorHandler<in TContext, in TP1, in TP2, out TResult>(NameValueCollection query, TContext context, TP1 tp1, TP2 tp2);
+public delegate TResult ParameterCollectorHandler<in TContext, in TP1, in TP2, in TP3, out TResult>(NameValueCollection query, TContext context, TP1 tp1, TP2 tp2, TP3 tp3);
+
+#endregion

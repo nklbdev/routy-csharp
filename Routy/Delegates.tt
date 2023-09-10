@@ -1,53 +1,42 @@
-﻿<#@ template debug="false" hostspecific="false" language="C#" #>
-<#@ assembly name="System.Core" #>
-<#@ import namespace="System.Linq" #>
-<#@ output extension=".cs" #>
-<# const int funcCount = 17; #>
-<# var paramCountRange = Enumerable.Range(0, funcCount).ToArray(); #>
-<#
-    string F(int count, string format, bool left = false, bool right = false) =>
-        (left && count > 0 ? ", " : "") +
-        string.Join(", ", Enumerable.Range(1, count).Select(x => format.Replace("_", x.ToString()))) +
-        (right && count > 0 ? ", " : "");
-#>
+﻿<#@ include file="Common.txt" once="true" #>
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Routy
-{
-    // RequestHandler
-    public delegate Task<TResult> AsyncRequestHandler<in TContext, TResult>(string httpMethod, Uri uri, TContext context, CancellationToken ct);
+namespace Routy;
 
-    // Functional value extractor
-    public delegate T ValueExtractor<in TContext, out T>(TContext context, NameValueCollection parameters, CancellationToken ct);
+// RequestHandler
+public delegate TResult RequestHandler<in TContext, out TResult>(string httpMethod, Uri uri, TContext context);
 
-    // Functional mutator
-    public delegate T Mutator<T>(T t);
+// Functional value extractor
+public delegate T ValueExtractor<in TContext, out T>(TContext context, NameValueCollection parameters);
 
-    #region Parameter collector fillers
+// Value parser
+public delegate TErr Parser<TRes, out TErr>(string source, out TRes result);
+
+// Functional mutator
+public delegate T Mutator<T>(T t);
+
+#region Parameter collector fillers
 
 <#foreach (var pc in paramCountRange){#>
-    public delegate ParameterCollector<TContext<#=F(pc, "TQ_", true)#>, TResult, TController> ParameterCollectorFiller<TContext<#=F(pc, "TQ_", true)#>, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
+public delegate ParameterCollector<TContext<#=F(pc, "TQ_", true)#>, TResult, TController> ParameterCollectorFiller<TContext<#=F(pc, "TQ_", true)#>, TResult, TController>(ParameterCollector<TContext, TResult, TController> parameterCollector);
 <#}#>
 
-    #endregion
+#endregion
 
-    #region Middle handlers
-
-<#foreach (var pc in paramCountRange){#>
-    public delegate Task<TResult> AsyncResourceCollectorHandler<in TContext<#=F(pc, "in TP_", true)#>, TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context<#=F(pc, "TP_ tp_", true)#>, CancellationToken ct);
-<#}#>
+#region Middle handlers
 
 <#foreach (var pc in paramCountRange){#>
-    public delegate Task<TResult> AsyncHttpMethodCollectorHandler<in TContext<#=F(pc, "in TP_", true)#>, TResult>(string httpMethod, NameValueCollection query, TContext context<#=F(pc, "TP_ tp_", true)#>, CancellationToken ct);
+public delegate TResult ResourceCollectorHandler<in TContext<#=F(pc, "in TP_", true)#>, out TResult>(string httpMethod, ICollection<string> urlSegments, NameValueCollection queryParameters, TContext context<#=F(pc, "TP_ tp_", true)#>);
 <#}#>
 
 <#foreach (var pc in paramCountRange){#>
-    public delegate Task<TResult> AsyncParameterCollectorHandler<in TContext<#=F(pc, "in TP_", true)#>, TResult>(NameValueCollection query, TContext context<#=F(pc, "TP_ tp_", true)#>, CancellationToken ct);
+public delegate TResult HttpMethodCollectorHandler<in TContext<#=F(pc, "in TP_", true)#>, out TResult>(string httpMethod, NameValueCollection query, TContext context<#=F(pc, "TP_ tp_", true)#>);
 <#}#>
 
-    #endregion
-}
+<#foreach (var pc in paramCountRange){#>
+public delegate TResult ParameterCollectorHandler<in TContext<#=F(pc, "in TP_", true)#>, out TResult>(NameValueCollection query, TContext context<#=F(pc, "TP_ tp_", true)#>);
+<#}#>
+
+#endregion

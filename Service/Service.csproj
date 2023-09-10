@@ -1,12 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
     <RootNamespace>Service</RootNamespace>
     <AssemblyName>Service</AssemblyName>
     <OutputPath>bin\Debug\</OutputPath>
     <ApplicationIcon />
     <StartupObject />
     <OutputType>Exe</OutputType>
+    <LangVersion>default</LangVersion>
+    <Nullable>enable</Nullable>
+    <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.8.1" />

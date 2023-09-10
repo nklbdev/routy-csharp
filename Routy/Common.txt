@@ -1,0 +1,18 @@
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ output extension=".cs" #>
+<#
+    const int maxParams = 3;
+    const int funcCount = maxParams + 1;
+    var paramCountRange = Enumerable.Range(0, funcCount).ToArray();
+    static string Q(string source) => string.IsNullOrEmpty(source) ? "" : $"<{source}>";
+    static string L(string source) => string.IsNullOrEmpty(source) ? "" : $", {source}";
+    static string R(string source) => string.IsNullOrEmpty(source) ? "" : $"{source}, ";
+    static string S(string source) => L(R(source));
+    static string J(params string[] sources) => string.Join(", ", sources.Where(x => !string.IsNullOrEmpty(x)));
+    static string F(int count, string format, bool left = false, bool right = false) =>
+        (left && count > 0 ? ", " : "") +
+        string.Join(", ", Enumerable.Range(1, count).Select(x => format.Replace("_", x.ToString()))) +
+        (right && count > 0 ? ", " : "");
+#>

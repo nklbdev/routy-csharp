@@ -4,38 +4,37 @@ using System.IO;
 using System.Reflection;
 using System.Web;
 
-namespace Service
+namespace Service;
+
+public static class Deserialization
 {
-    public static class Deserialization
+    private static readonly Dictionary<Type, Func<string, object>> Parsers = new()
     {
-        private static readonly Dictionary<Type, Func<string, object>> Parsers = new Dictionary<Type, Func<string, object>>
-        {
-            [typeof(string)] = s => s,
-            [typeof(bool)] = s => bool.Parse(s),
-            [typeof(int)] = s => int.Parse(s)
-        };
+        [typeof(string)] = s => s,
+        [typeof(bool)] = s => bool.Parse(s),
+        [typeof(int)] = s => int.Parse(s)
+    };
 
-        public static T DeserializeFormUrlencoded<T>(Stream stream) where T : new()
+    public static T DeserializeFormUrlencoded<T>(Stream stream) where T : new()
+    {
+        using (var reader = new StreamReader(stream))
         {
-            using (var reader = new StreamReader(stream))
+            var content = reader.ReadToEnd();
+            var decodedContent = HttpUtility.UrlDecode(content);
+            var nvc = HttpUtility.ParseQueryString(decodedContent);
+            var t = new T();
+            foreach (var kvp in nvc.AllKeys)
             {
-                var content = reader.ReadToEnd();
-                var decodedContent = HttpUtility.UrlDecode(content);
-                var nvc = HttpUtility.ParseQueryString(decodedContent);
-                var t = new T();
-                foreach (var kvp in nvc.AllKeys)
-                {
-                    var pi = typeof(T).GetProperty(kvp, BindingFlags.Public | BindingFlags.Instance);
-                    if (pi == null)
-                        continue;
+                var pi = typeof(T).GetProperty(kvp, BindingFlags.Public | BindingFlags.Instance);
+                if (pi == null)
+                    continue;
 
-                    if (Parsers.TryGetValue(pi.PropertyType, out var parser))
-                        pi.SetValue(t, parser(nvc[kvp]), null);
-                    else
-                        throw new NotImplementedException("21");
-                }
-                return t;
+                if (Parsers.TryGetValue(pi.PropertyType, out var parser))
+                    pi.SetValue(t, parser(nvc[kvp]), null);
+                else
+                    throw new NotImplementedException("21");
             }
+            return t;
         }
     }
 }

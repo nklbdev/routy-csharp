@@ -1,62 +1,48 @@
-﻿<#@ template debug="false" hostspecific="false" language="C#" #>
-<#@ assembly name="System.Core" #>
-<#@ import namespace="System.Linq" #>
-<#@ output extension=".cs" #>
-<# const int maxParams = 16; #>
-<# const int funcCount = maxParams + 1; #>
-<# var paramCountRange = Enumerable.Range(0, funcCount - 1).ToArray(); #>
-<#
-    string Q(string source) => string.IsNullOrEmpty(source) ? "" : $"<{source}>";
-    string L(string source) => string.IsNullOrEmpty(source) ? "" : $", {source}";
-    string R(string source) => string.IsNullOrEmpty(source) ? "" : $"{source}, ";
-    string S(string source) => L(R(source));
-    string J(params string[] sources) => string.Join(", ", sources.Where(x => !string.IsNullOrEmpty(x)));
-    string F(int count, string format) => J(Enumerable.Range(1, count).Select(x => format.Replace("_", x.ToString())).ToArray());
-#>
+﻿<#@ include file="Common.txt" once="true" #>
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Routy
+namespace Routy;
+
+<#
+    var paramCountRangeArray = paramCountRange.ToArray();
+    foreach (var paramCount in paramCountRangeArray.Take(paramCountRangeArray.Length - 1)){
+        var posTypeParams = F(paramCount, "TP_");
+        var posParams = F(paramCount, "TP_ p_");
+        var posParams2 = F(paramCount, "p_");#>
+public class ValuedResource<TContext<#=L(posTypeParams)#>, TValue, TResult>
 {
-<#foreach (var pc in paramCountRange){
-      var posTypeParams = F(pc, "TP_");
-      var posParams = F(pc, "TP_ p_");
-      var posParams2 = F(pc, "p_");#>
-    public class ValuedResource<TContext<#=L(posTypeParams)#>, TValue, TResult>
+    private readonly Parser<TValue, bool> _parser;
+    private readonly HttpMethodCollectorHandler<TContext<#=L(posTypeParams)#>, TValue, TResult> _methodCollectorHandler;
+    private readonly ResourceCollectorHandler<TContext<#=L(posTypeParams)#>, TValue, TResult> _nestedResourceCollectorHandler;
+
+    public ValuedResource(
+        Parser<TValue, bool> parser,
+        HttpMethodCollectorHandler<TContext<#=L(posTypeParams)#>, TValue, TResult> methodCollectorHandler,
+        ResourceCollectorHandler<TContext<#=L(posTypeParams)#>, TValue, TResult> nestedResourceCollectorHandler)
     {
-        private readonly Func<string, TValue> _parser;
-        private readonly AsyncHttpMethodCollectorHandler<TContext<#=L(posTypeParams)#>, TValue, TResult> _methodCollectorHandler;
-        private readonly AsyncResourceCollectorHandler<TContext<#=L(posTypeParams)#>, TValue, TResult> _nestedAsyncResourceCollectorHandler;
-        
-        public ValuedResource(
-            Func<string, TValue> parser,
-            AsyncHttpMethodCollectorHandler<TContext<#=L(posTypeParams)#>, TValue, TResult> methodCollectorHandler,
-            AsyncResourceCollectorHandler<TContext<#=L(posTypeParams)#>, TValue, TResult> nestedAsyncResourceCollectorHandler)
-        {
-            _parser = parser;
-            _methodCollectorHandler = methodCollectorHandler;
-            _nestedAsyncResourceCollectorHandler = nestedAsyncResourceCollectorHandler;
-        }
-        
-        public async Task<TResult> Handle(string httpMethod, IEnumerable<string> uriSegments, NameValueCollection query, TContext context<#=L(posParams)#>, CancellationToken ct)
-        {
-            if (!uriSegments.Any())
-                throw new NotImplementedException("1");
-
-            var head = uriSegments.First();
-            var tail = uriSegments.Skip(1).ToArray();
-
-            var value = _parser(head);
-
-            return tail.Any()
-                ? await _nestedAsyncResourceCollectorHandler(httpMethod, tail, query, context<#=L(posParams2)#>, value, ct)
-                : await _methodCollectorHandler(httpMethod, query, context<#=L(posParams2)#>, value, ct);
-        }
+        _parser = parser;
+        _methodCollectorHandler = methodCollectorHandler;
+        _nestedResourceCollectorHandler = nestedResourceCollectorHandler;
     }
 
-<#}#>
+    public TResult Handle(string httpMethod, IEnumerable<string> uriSegments, NameValueCollection query, TContext context<#=L(posParams)#>)
+    {
+        if (!uriSegments.Any())
+            throw new NotImplementedException("1");
+
+        var head = uriSegments.First();
+        var tail = uriSegments.Skip(1).ToArray();
+
+        if (_parser(head, out var value))
+            return tail.Any()
+                ? _nestedResourceCollectorHandler(httpMethod, tail, query, context<#=L(posParams2)#>, value)
+                : _methodCollectorHandler(httpMethod, query, context<#=L(posParams2)#>, value);
+
+        throw new NotImplementedException("2");
+    }
 }
+
+<#}#>
